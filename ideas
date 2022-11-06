@@ -1,0 +1,5 @@
+#this file should contain ideas or tips that should be implemented for
+#efficiency/performance or user experience.
+if shell was started in interractive mode, fork() function shouldn't be called
+ and no freeing shall be done since arguments can't be freed.
+

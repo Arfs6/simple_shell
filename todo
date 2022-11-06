@@ -1,0 +1,5 @@
+# this file has functions or scripts that needs to be finished before next
+#stable version of hsh will be ready
+execute function: The function should execute build in commands and external
+commands.
+_free: This function should free memory allocated by malloc and it's like
