@@ -1,9 +1,8 @@
 #include <stdlib.h>
-
 #include "main.h"
 
 /**
- * _free - ree the vector
+ * _free - free a vector
  * @vector: vector to free
  */
 void _free(char **vector)
