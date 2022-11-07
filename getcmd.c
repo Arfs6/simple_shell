@@ -14,18 +14,12 @@ unsigned int findSize(char *str);
  * NULL if no command was passed or
  * NULL if fails.
  */
-char **getCmd(char **str)
+char **getCmd(void)
 {
 	char *cmd, *cmdLine, **cmdVector;
-	int ret, i = 0;
-	unsigned int size;
-	unsigned long int temp = 0;
+	int ret;
+	size_t size = 0, temp = 0, i = 0;
 
-	if (str != NULL)
-	{
-		*cmdVector = str[1];
-		return (cmdVector);
-	}
 
 	ret = getline(&cmdLine, &temp, stdin);
 	/* since EOF can't be stored in char, can't send the info to execute() yet */
@@ -33,25 +27,21 @@ char **getCmd(char **str)
 		exit(0);
 
 	/* remove all whitty characters */
-	for (i = 0; i < temp - 1; ++i)
+	for (i = 0; temp && i < temp - 1; ++i)
 	{
-		printf("0x%x ", cmdLine[i]);
-		if (cmdLine[i] == '\t' || cmdLine[i] == '\n' || cmdLine[i] == '\0')
+		if (cmdLine[i] == '\t' || cmdLine[i] == '\n')
 			cmdLine[i] = ' ';
-		printf("0x%x ", cmdLine[i]);
 	}
 
+	size = findSize(_strdup(cmdLine));
 	cmd = strtok(cmdLine, " ");
-	printf("cmd = %s\ncmdLine = %s\n", cmd, cmdLine);
 	if (cmd == NULL)
 		return (NULL);
-	size = findSize(cmdLine);
-	cmdVector = malloc(sizeof(*cmdVector) * size);
+	cmdVector = malloc(sizeof(*cmdVector) * (size + 1));
 	i = 0;
 
 	do {
 		cmdVector[i] = _strdup(cmd);
-		printf("%s : %s\n", cmd, "");
 		if (cmdVector[i] == NULL)
 		{
 			cmdVector[i + 1] = NULL;/* to confirm it is NULL terminated */
@@ -79,10 +69,16 @@ unsigned int findSize(char *str)
 {
 	unsigned int size = 0;
 
-	strtok(str, " ");
+	if (strtok(str, " ") == NULL)
+	{
+		free(str);
+		return (0);
+	}
 	size++;
 	while (strtok(NULL, " "))
 		size++;
+	printf("%u\n", size);
 
+	free(str);
 	return (size);
 }

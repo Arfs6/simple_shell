@@ -1,0 +1,15 @@
+include sys/types.h
+include sys/stat.h
+include stdlib.h
+include unistd.h
+
+int execute(int ac, char **av, char **env)
+declare statBuf pointer of type struct stat
+declare a vector "vector" to store the vectore in
+if ac > 1
+	STAT av[1], statBuf
+	if fails, return status
+	execve av[1], &av[1], env
+	if fails, return status
+
+run an infinite while loop

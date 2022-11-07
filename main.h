@@ -12,7 +12,7 @@
 void _free(char **);
 
 /* getcmd.c */
-char **getCmd(char **str);
+char **getCmd(void);
 /* put.c */
 int _putchar(char c);
 int _puts(char *str);
