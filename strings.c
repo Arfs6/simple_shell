@@ -1,10 +1,10 @@
 #include <stdlib.h>
 
 /**
- * _strlen - finds the length of a NULL terminated string
+ * _strlen - finds the length of a NULL-terminated string
  * @str: string to find it's length
  *
- * Return: length of string
+ * Return: length of the string
  */
 int _strlen(char *str)
 {
@@ -23,7 +23,7 @@ int _strlen(char *str)
  * _strdup - duplicate a string
  * @str: string to duplicate
  *
- * Return: pointer to duplicated string (success)
+ * Return: pointer to the duplicated string (on success)
  * NULL if str = null
  * NULL if unsuccessful
 */
@@ -36,7 +36,7 @@ char *_strdup(const char *str)
 		return (NULL);
 
 	for (len = 0; str[len]; ++len)
-	;
+		;
 	dup = malloc(sizeof(char) * (len + 1));
 	if (!dup)
 		return (NULL);
