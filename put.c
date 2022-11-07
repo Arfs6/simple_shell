@@ -13,10 +13,10 @@
 int _putchar(char c)
 {
 	return (write(STDOUT_FILENO, &c, 1));
-			}
+}
 
 /**
- * _puts - prints a null terminated string to standard output
+ * _puts - prints a null-terminated string to standard output
  * @str: string to print
  *
  * Return: number of bites written (sucess)
