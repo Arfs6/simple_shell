@@ -19,7 +19,6 @@ char **getCmd(void)
 	int ret;
 	size_t size = 0, temp = 0, i = 0;
 
-
 	ret = getline(&cmdLine, &temp, stdin);
 	/* since EOF can't be stored in char, can't send the info to execute() yet */
 	if (ret == -1)
@@ -76,7 +75,6 @@ unsigned int findSize(char *str)
 	size++;
 	while (strtok(NULL, " "))
 		size++;
-	printf("%u\n", size);
 
 	free(str);
 	return (size);
