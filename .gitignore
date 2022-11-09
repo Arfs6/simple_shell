@@ -3,3 +3,4 @@
 *.swp
 tes*
 a.out
+*.o
