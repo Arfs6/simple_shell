@@ -1,6 +1,24 @@
 #include <stdlib.h>
 
 /**
+* _strcat - concactenate two strings
+* @src: String to concactinate
+* @dest: concactenate here
+* @len: index to start concatenating
+*
+* Return: concatenated string
+*/
+int _strcat(char *src, char *dest, int len)
+{
+	int j = 0;
+
+	for (j = 0; src[j]; j++, len++)
+	dest[len] = src[j];
+	dest[len] = '\0';
+	return (len);
+}
+
+/**
  * _strlen - finds the length of a NULL terminated string
  * @str: string to find it's length
  *
@@ -48,3 +66,27 @@ char *_strdup(const char *str)
 
 	return (dup);
 }
+
+/**
+ * strRev - reverse a string
+ * @str: string to reverse
+*/
+void strRev(char *str)
+{
+	int start, half, stop;
+	char tmp;
+
+	stop = start = half = 0;
+	for (stop = 0; str[stop]; ++stop)
+		;
+	stop--;
+	half = stop / 2;
+	for (start = 0; start <= half; ++start, --stop)
+	{
+		tmp = str[start];
+		str[start] = str[stop];
+		str[stop] = tmp;
+	}
+}
+
+

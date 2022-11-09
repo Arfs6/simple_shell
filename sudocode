@@ -6,6 +6,8 @@ include unistd.h
 int execute(int ac, char **av, char **env)
 declare statBuf pointer of type struct stat
 declare a vector "vector" to store the vectore in
+declare an int ret to store getCmd status
+declare an int num to store the current line
 if ac > 1
 	STAT av[1], statBuf
 	if fails, return status
@@ -13,3 +15,18 @@ if ac > 1
 	if fails, return status
 
 run an infinite while loop
+print $
+	call getCmd and store result in vector
+if ret = TRUE, call printError and continue loop
+else if vector = NULL, continue loop
+use stat to check if the file exist
+if it doesn't exist, print appropriate error and continue
+fork the current process
+if this is the child process, execute what is in vector
+	if it fails to execute, return status to parent process
+if this is the parent process, wait for child process
+	if child process fails to execute, ...
+free vector
+go back to the top of the loop.
+
+return (0)

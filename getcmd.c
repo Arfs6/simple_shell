@@ -8,7 +8,6 @@ unsigned int findSize(char *str);
 
 /**
  * getCmd - get command vector. e.g. argv
- * @str: vector if shell was started with arguments
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
