@@ -1,4 +1,4 @@
-#**simple_shell**  
+# **simple_shell**  
 
 This project is an attempt to model the sh shell (/bin/sh in unix machines).
 Only c language was used. System calls like fork, wait and execve were used.  
