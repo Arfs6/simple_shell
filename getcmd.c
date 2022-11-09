@@ -8,7 +8,6 @@ unsigned int findSize(char *str);
 
 /**
  * getCmd - get command vector. e.g. argv
- * @str: vector if shell was started with arguments
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
@@ -19,7 +18,6 @@ char **getCmd(void)
 	char *cmd, *cmdLine, **cmdVector;
 	int ret;
 	size_t size = 0, temp = 0, i = 0;
-
 
 	ret = getline(&cmdLine, &temp, stdin);
 	/* since EOF can't be stored in char, can't send the info to execute() yet */
@@ -77,7 +75,6 @@ unsigned int findSize(char *str)
 	size++;
 	while (strtok(NULL, " "))
 		size++;
-	printf("%u\n", size);
 
 	free(str);
 	return (size);

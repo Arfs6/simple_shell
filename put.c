@@ -16,15 +16,16 @@ int _putchar(char c)
 }
 
 /**
- * _puts - prints a null-terminated string to standard output
+ * _puts - prints a null terminated string to a stream
  * @str: string to print
+ * @fd: file stream to write to
  *
  * Return: number of bites written (sucess)
  * -1 coudn't write
  */
-int _puts(char *str)
+int _puts(char *str, int fd)
 {
 	if (str == NULL)
 		return (0);
-	return (write(STDOUT_FILENO, str, _strlen(str)));
+	return (write(fd, str, _strlen(str)));
 }

@@ -1,47 +1,60 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/wait.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
-int execute(char **av, char **env)
+#include "main.h"
 
 /**
  * main - entery code for shell
- * @ac: arguments count
- * @av: arguments vector
+ * @argc: arguments count
+ * @iargv: arguments vector
  * @env: environment variables vector
  *
- * Return: 0 (sucess)
+ * Return: shell exited normally 0 (sucess)
+ * or status of executed file
  */
-int main(int ac, char **av, char **env)
+int main(int argc, char **argv, char **env)
 {
-	char *buf = NULL;
-	size_t *bufferSize = 0;
-	int ret = 0;
+	int ret = 0, lineNo = 0;
+	struct stat statBuf;
+	char **vector = NULL;
 
-	do{
-		ret = getline(buffer, *bufferSize, stdout);
+	if (argc > 1)
+	{
+		ret = stat(argv[1], &statBuf);
 		if (ret == -1)
-			exit(1);
-		_puts("$ ");
-		ret = execute(av, env);
-	} while(TRUE);
+		{
+			printError(NOTFOUNDERR, argv[1], 0);
+			exit(2);
+		}
+		ret = execve(argv[1], &(argv[1]), env);
+		if (ret == -1)
+		{
+			printError(SYSERR, argv[0], 0);
+			exit(2);
+		}
+	}
+
+	lineNo = -1;
+	while (TRUE)
+	{
+		_puts("$ ", STDOUT_FILENO);
+		lineNo++;
+		vector = getCmd();
+		if (vector == NULL)
+			continue;
+		ret = stat(vector[0], &statBuf);
+		if (ret == -1)
+		{
+			printError(NOTFOUNDERR, argv[0], lineNo);
+			_free(vector);
+			continue;
+		}
+		execute(vector, env, argv[0], lineNo);
+		_free(vector);
+	}
 
 	return (0);
 }
-
-/**
- * execute - execute a command
- * @av: command vector
- * @env: environment variables
- *
- * Return: 0 sucess
- * -1 coudn't execute
- */
-int execute(char **av, char **env)
-{
-	struct stat *info;
-
-	if (
