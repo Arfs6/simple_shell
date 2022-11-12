@@ -17,44 +17,36 @@
  */
 int main(int argc, char **argv, char **env)
 {
-	int ret = 0, lineNo = 0;
-	struct stat statBuf;
+	int lineNo = 1;
 	char **vector = NULL;
+	list_t *path;
+
+	path = getPathList(env);
 
 	if (argc > 1)
 	{
-		ret = stat(argv[1], &statBuf);
-		if (ret == -1)
-		{
-			printError(NOTFOUNDERR, argv[1], 0);
-			exit(2);
-		}
-		ret = execve(argv[1], &(argv[1]), env);
-		if (ret == -1)
-		{
-			printError(SYSERR, argv[0], 0);
-			exit(2);
-		}
+		return (execute(&(argv[1]), env, argv[0], lineNo, path, argc));
 	}
 
-	lineNo = -1;
+	lineNo = 0;
 	while (TRUE)
 	{
 		_puts("$ ", STDOUT_FILENO);
 		lineNo++;
-		vector = getCmd();
+		vector = getCmd(path);
 		if (vector == NULL)
 			continue;
-		ret = stat(vector[0], &statBuf);
-		if (ret == -1)
-		{
-			printError(NOTFOUNDERR, argv[0], lineNo);
-			_free(vector);
-			continue;
-		}
-		execute(vector, env, argv[0], lineNo);
+		execute(vector, env, argv[0], lineNo, path, argc);
 		_free(vector);
 	}
 
 	return (0);
 }
+/*ret = stat(vector[0], &statBuf);
+		if (ret == -1)
+		{
+			printError(NOTFOUNDERR, argv[0], lineNo, vector[0]);
+			_free(vector);
+			continue;
+	}
+	*/

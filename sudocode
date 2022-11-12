@@ -1,32 +1,83 @@
-include sys/types.h
-include sys/stat.h
-include stdlib.h
-include unistd.h
+{
+int getPath(char *cmd, list_t *pathList, char *buf)
+int i = 0, ret = 0
+list_t *temp
 
-int execute(int ac, char **av, char **env)
-declare statBuf pointer of type struct stat
-declare a vector "vector" to store the vectore in
-declare an int ret to store getCmd status
-declare an int num to store the current line
-if ac > 1
-	STAT av[1], statBuf
-	if fails, return status
-	execve av[1], &av[1], env
-	if fails, return status
+while true
+if cmd[i] == '/'
+return strdup(cmd)
+else if cmd[i] = '\0'
+break
 
-run an infinite while loop
-print $
-	call getCmd and store result in vector
-if ret = TRUE, call printError and continue loop
-else if vector = NULL, continue loop
-use stat to check if the file exist
-if it doesn't exist, print appropriate error and continue
-fork the current process
-if this is the child process, execute what is in vector
-	if it fails to execute, return status to parent process
-if this is the parent process, wait for child process
-	if child process fails to execute, ...
-free vector
-go back to the top of the loop.
+i++
 
+temp = pathList
+while temp
+buf = malloc(sizeof(char) * (strlen(temp->dir) + strlen(cmd)))
+if buf == 0
+return -1
+i = strncat(temp->dir, buf, i)
+i = strncat("/", buf, i)
+i = strncat(cmd, buf, i)
+if access(path, F_OK) == 0
 return (0)
+free(buf)
+
+printError(NOTFOUNDERR)
+}
+
+{
+void _dprintf(int fd, char *format, ...)
+char buffer[1024]
+int i = 0, len = 0
+va_list list;
+
+va_start(list, format)
+for i = 0; format[i]; i++, len++
+if format[i] != '%'
+buffer[len] = format[i]
+else
+if format[i + 1] == 'i'
+len = intcat(va_arg(list, int), buf, len)
+else if format[i + 1] = 's'
+len = strcat(va_arg(list, char *), buf, len)
+i++
+
+ret = write(fd, buf, len
+}
+
+{
+int isBuiltin(char *cmd)
+char builtinList[2][] = "exit", NULL;
+int i = 0, ret = 0
+
+for i = 0; builtinList[i]; i++
+ret = _strncmp(builtinList[i], cmd, strlen(builtinList[i]))
+if ret = 0
+executeBuiltin(builtinList[i])
+return (0)
+
+return -1
+}
+
+{
+	int setPath(char *argv, list_t *path)
+		char *temp
+		int ret = 0, i = 0
+		list_t *path
+
+		while true
+			temp = malloc(strlen(path->dir) + strlen(argv[0] + 1)
+					i = strncat(argv[0], temp, i)
+					i = strncat(path->dir, temp, i)
+					ret = access(path, f_ok)
+					if ret = 0
+free(argv[0])
+argv[0] = temp
+return 0
+
+free(temp)
+temp = NULL
+
+return -1
+}

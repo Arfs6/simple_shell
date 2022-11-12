@@ -1,4 +1,7 @@
 #include <stdlib.h>
+#include <stdio.h>
+
+#include "main.h"
 
 /**
 * _strcat - concactenate two strings
@@ -89,4 +92,28 @@ void strRev(char *str)
 	}
 }
 
+/**
+ * _strncmp - checks if two strings are equal
+ * @str1: first string
+ * @str2: second string
+ * @index: index to stop searching
+ *
+ * Return: 0 success
+ * negative value: str1 > str2
+ * positive value: str2 > str1
+ */
+int _strncmp(char *str1, char *str2, int index)
+{
+	int i = 0;
 
+	while (i < index)
+	{
+		if (str1[i] != str2[i])
+			return (str1[i] - str2[i]);
+		if (str1[i] == '\0' || str2[i] == '\0')
+			break;
+		i++;
+	}
+
+	return (0);
+}
