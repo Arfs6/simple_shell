@@ -14,11 +14,12 @@
 #define PERMERR STDERR_FILENO, "%s: %i: %s: Permission denied\n"
 
 /**
- * struct path_s - link list to store PATH variable dirs
+ * struct list_s - link list to store PATH variable dirs
  * @dir: string containing directory
  * @next: pointer to next string
  */
-struct list_s{
+struct list_s
+{
 	char *dir;
 	struct list_s *next;
 };
@@ -27,7 +28,8 @@ typedef struct list_s list_t;
 /* comments above prototypes states which files the source code is in */
 
 /* execute.c */
-int execute(char *argv[], char *env[], char *execName, int lineNo, list_t *path, int argc);
+int execute(char *argv[], char *env[], char *execName, int lineNo, list_t
+		*path, int argc);
 
 /* functions.c */
 void _free(char **);

@@ -1,52 +1,4 @@
 {
-int getPath(char *cmd, list_t *pathList, char *buf)
-int i = 0, ret = 0
-list_t *temp
-
-while true
-if cmd[i] == '/'
-return strdup(cmd)
-else if cmd[i] = '\0'
-break
-
-i++
-
-temp = pathList
-while temp
-buf = malloc(sizeof(char) * (strlen(temp->dir) + strlen(cmd)))
-if buf == 0
-return -1
-i = strncat(temp->dir, buf, i)
-i = strncat("/", buf, i)
-i = strncat(cmd, buf, i)
-if access(path, F_OK) == 0
-return (0)
-free(buf)
-
-printError(NOTFOUNDERR)
-}
-
-{
-void _dprintf(int fd, char *format, ...)
-char buffer[1024]
-int i = 0, len = 0
-va_list list;
-
-va_start(list, format)
-for i = 0; format[i]; i++, len++
-if format[i] != '%'
-buffer[len] = format[i]
-else
-if format[i + 1] == 'i'
-len = intcat(va_arg(list, int), buf, len)
-else if format[i + 1] = 's'
-len = strcat(va_arg(list, char *), buf, len)
-i++
-
-ret = write(fd, buf, len
-}
-
-{
 int isBuiltin(char *cmd)
 char builtinList[2][] = "exit", NULL;
 int i = 0, ret = 0
@@ -60,24 +12,3 @@ return (0)
 return -1
 }
 
-{
-	int setPath(char *argv, list_t *path)
-		char *temp
-		int ret = 0, i = 0
-		list_t *path
-
-		while true
-			temp = malloc(strlen(path->dir) + strlen(argv[0] + 1)
-					i = strncat(argv[0], temp, i)
-					i = strncat(path->dir, temp, i)
-					ret = access(path, f_ok)
-					if ret = 0
-free(argv[0])
-argv[0] = temp
-return 0
-
-free(temp)
-temp = NULL
-
-return -1
-}

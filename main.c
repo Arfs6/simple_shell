@@ -9,7 +9,7 @@
 /**
  * main - entery code for shell
  * @argc: arguments count
- * @iargv: arguments vector
+ * @argv: arguments vector
  * @env: environment variables vector
  *
  * Return: shell exited normally 0 (sucess)
@@ -42,11 +42,3 @@ int main(int argc, char **argv, char **env)
 
 	return (0);
 }
-/*ret = stat(vector[0], &statBuf);
-		if (ret == -1)
-		{
-			printError(NOTFOUNDERR, argv[0], lineNo, vector[0]);
-			_free(vector);
-			continue;
-	}
-	*/

@@ -8,6 +8,7 @@ unsigned int findSize(char *str);
 
 /**
  * getCmd - get command vector. e.g. argv
+ * @path: clear path if EOF was encountered
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
@@ -85,7 +86,7 @@ unsigned int findSize(char *str)
 }
 
 /**
- * getPath - get PATH variable from environment variable
+ * getPathList - get PATH variable from environment variable
  * @env: environment variable
  *
  * Return: vector of paths in PATH
@@ -95,7 +96,7 @@ list_t *getPathList(char **env)
 {
 	char *temp, *path;
 	list_t *head = NULL, *cur;
-	int i= 0, tmp = 0;
+	int i = 0, tmp = 0;
 
 	path = env[i];
 	while (path != NULL)
