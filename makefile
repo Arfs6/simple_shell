@@ -1,6 +1,6 @@
 flags = -Wall -Werror -Wextra -pedantic -std=gnu89
-objects = .functions.o .strings.o .getcmd.o .put.o .main.o .execute.o \
-	  .printerror.o
+objects = .functions.o .strings.o .get.o .put.o .main.o .execute.o \
+	  .linklist.o .print.o
 
 hsh: $(objects)
 	gcc -o hsh $(objects)
@@ -9,16 +9,18 @@ hsh: $(objects)
 	gcc -c $(flags) main.c -o .main.o
 .execute.o: execute.c main.h
 	gcc -c $(flags) execute.c -o .execute.o
-.getcmd.o: getcmd.c main.h
-	gcc -c $(flags) getcmd.c -o .getcmd.o
+.get.o: get.c main.h
+	gcc -c $(flags) get.c -o .get.o
 .functions.o: functions.c main.h
 	gcc -c $(flags) functions.c -o .functions.o
-.printerror.o: printerror.c main.h
-	gcc -c $(flags) printerror.c -o .printerror.o
 .strings.o: strings.c main.h
 	gcc -c $(flags) strings.c -o .strings.o
 .put.o: put.c main.h
 	gcc -c $(flags) put.c -o .put.o
+.linklist.o: linklist.c main.h
+	gcc -c $(flags) linklist.c -o .linklist.o
+.print.o: print.c main.h
+	gcc -c $(flags) print.c -o .print.o
 
 clean:
 	rm -rf *.o
