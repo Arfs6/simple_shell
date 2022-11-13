@@ -45,79 +45,82 @@ int execute(char *argv[], char *env[], char *execName, int lineNo, list_t *path,
 			ret = 1;
 		}
 	}
-		if (ret == 0)
-			ret = setPath(argv, path, execName, lineNo, argc);
-		if (ret == FAIL)
-			return (FAIL);
+	if (ret == 0)
+		ret = setPath(argv, path, execName, lineNo, argc);
+	if (ret == FAIL)
+		return (FAIL);
 
-		if (argc > 1)
-		{
-			ret = execve(argv[0], argv, env);
-			if (ret == -1)
-			{
-				_dprintf(SYSERR, execName, lineNo);
-				perror(NULL);
-			}
-			return (ret);
-		}
-		myPid = fork();
-		if (myPid == -1)
+	if (argc > 1)
+	{
+		ret = execve(argv[0], argv, env);
+		if (ret == -1)
 		{
 			_dprintf(SYSERR, execName, lineNo);
 			perror(NULL);
 		}
-		if (myPid == 0)
-		{
-			ret = execve(argv[0], argv, env);
-			if (ret == -1)
-			{
-				_dprintf(SYSERR, execName, lineNo);
-				perror(NULL);
-				return (ret);
-			}
-		}
-		else
-			wait(&status);
-
-		return (status);
+		return (ret);
 	}
-
-	/**
-	 * setPath - set path for executable
-	 * @cmd: command to search for
-	 * @path: link list to PATH variable
-	 *
-	 * Return: 0 found executable
-	 * -1 executable not found
-	 */
-	int setPath(char **cmd, list_t *path, char *execName, int lineNo, int argc)
+	myPid = fork();
+	if (myPid == -1)
 	{
-		int i = 0;
-		char *buf;
-		list_t *temp = path;
-
-		while (temp)
+		_dprintf(SYSERR, execName, lineNo);
+		perror(NULL);
+	}
+	if (myPid == 0)
+	{
+		ret = execve(argv[0], argv, env);
+		if (ret == -1)
 		{
-			buf = malloc(sizeof(char) * (_strlen(*cmd) + _strlen(temp->dir) + 2));
-			if (buf == NULL)
-			{
-				_dprintf(MEMERR, execName, lineNo);
-				return (FAIL);
-			}
-			i = 0;
-			i = _strcat(temp->dir, buf, i);
-			if (buf[i - 1] != '/')
-				i = _strcat("/", buf, i);
+			_dprintf(SYSERR, execName, lineNo);
+			perror(NULL);
+			return (ret);
+		}
+	}
+	else
+		wait(&status);
+
+	return (status);
+}
+
+/**
+ * setPath - set path for executable
+ * @cmd: command to search for
+ * @path: link list to PATH variable
+ *
+ * Return: 0 found executable
+ * -1 executable not found
+ */
+int setPath(char **cmd, list_t *path, char *execName, int lineNo, int argc)
+{
+	int i = 0;
+	char *buf;
+	list_t *temp = path;
+
+	while (temp)
+	{
+		buf = malloc(sizeof(char) * (_strlen(*cmd) + _strlen(temp->dir) + 2));
+		if (buf == NULL)
+		{
+			_dprintf(MEMERR, execName, lineNo);
+			return (FAIL);
+		}
+		i = 0;
+		i = _strcat(temp->dir, buf, i);
+		if (buf[i - 1] != '/')
+		{
+			i = _strcat("/", buf, i);
 			i = _strcat(*cmd, buf, i);
-			if (access(buf, F_OK) == 0)
+		}
+		if (access(buf, F_OK) == 0)
+		{
+			if (access(buf, X_OK) == -1)
 			{
-				if (access(buf, X_OK) == -1)
-				{
-					_dprintf(PERMERR, execName, lineNo, *cmd);
-					return (-1);
-				}
-				if (argc == 1)
-					free(*cmd);
+				_dprintf(PERMERR, execName, lineNo, *cmd);
+				return (-1);
+			}
+			if (argc == 1)
+			{
+				free(*cmd);
 				*cmd = buf;
 				return (0);
 			}
@@ -129,3 +132,4 @@ int execute(char *argv[], char *env[], char *execName, int lineNo, list_t *path,
 		_dprintf(NOTFOUNDERR, execName, lineNo, *cmd);
 		return (FAIL);
 	}
+}
