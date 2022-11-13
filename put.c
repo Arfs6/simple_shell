@@ -23,7 +23,7 @@ int _putchar(char c)
  * Return: number of bites written (sucess)
  * -1 coudn't write
  */
-int _puts(char *str, int fd)
+int _puts(int fd, char *str)
 {
 	if (str == NULL)
 		return (0);

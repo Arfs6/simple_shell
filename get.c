@@ -26,7 +26,7 @@ char **getCmd(list_t *path)
 	{
 		free(cmdLine);
 		free_list(path);
-		exit(0);
+		terminate(0);
 	}
 
 	/* remove all whitty characters */
