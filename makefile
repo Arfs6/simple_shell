@@ -1,6 +1,6 @@
 flags = -Wall -Werror -Wextra -pedantic -std=gnu89
 objects = .functions.o .strings.o .get.o .put.o .main.o .execute.o \
-	  .linklist.o .print.o
+	  .linklist.o .print.o .commands.o
 
 hsh: $(objects)
 	gcc -o hsh $(objects)
@@ -11,6 +11,8 @@ hsh: $(objects)
 	gcc -c $(flags) execute.c -o .execute.o
 .get.o: get.c main.h
 	gcc -c $(flags) get.c -o .get.o
+.commands.o: commands.c main.h
+	gcc -c $(flags) commands.c -o .commands.o
 .functions.o: functions.c main.h
 	gcc -c $(flags) functions.c -o .functions.o
 .strings.o: strings.c main.h

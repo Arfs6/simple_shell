@@ -6,6 +6,7 @@
 /* macros */
 #define TRUE (1)
 #define FALSE (0)
+#define SUCCESS (0)
 #define FAIL (-1)
 
 #define SYSERR STDERR_FILENO, "%s: %i: "
@@ -29,12 +30,19 @@ typedef struct list_s list_t;
 
 /* execute.c */
 int execute(char *argv[], char *env[], char *execName, int lineNo, list_t
-		*path, int argc);
+		*path);
+
+/* commands.c */
+int execBuiltin(char **argv, char **env);
+void terminate(int status);
+void printEnv(char **env);
 
 /* functions.c */
 void _free(char **);
 int intcat(int num, char *dest, int len);
 void _memset(char *mem, size_t len);
+int isSlash(char *str);
+int checkAccess(char *path);
 
 /* get.c */
 char **getCmd(list_t *path);
@@ -42,7 +50,7 @@ list_t *getPathList(char **env);
 
 /* put.c */
 int _putchar(char c);
-int _puts(char *str, int fd);
+int _puts(int fd, char *str);
 
 /* strings.c */
 int _strcat(char *dest, char *src, int len);

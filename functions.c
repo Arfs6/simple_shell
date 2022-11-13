@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <unistd.h>
+
 #include "main.h"
 
 /**
@@ -72,4 +74,42 @@ void _memset(char *mem, size_t len)
 
 	for (i = 0; i < len; ++i)
 		mem[i] = '\0';
+}
+
+/**
+ * checkAccess - check access status of a file
+ * @path: path to file
+ *
+ * Return: 0: file exists and it is executable
+ * -1: file doesn't exist
+ *  -2: file is not executable
+ */
+int checkAccess(char *path)
+{
+	if (access(path, F_OK) == -1)
+		return (-1);
+	else if (access(path, X_OK) == -1)
+		return (-2);
+
+	return (SUCCESS);
+}
+
+/**
+ * isSlash - check if string has a slash '/'
+ * @str: string to parse
+ *
+ * Return: 0: str has a slash (SUCCESS)
+ * -1: str has no slash (FAIL)
+ */
+int isSlash(char *str)
+{
+	int i = 0;
+
+	for (i = 0; str[i]; ++i)
+	{
+		if (str[i] == '/')
+			return (SUCCESS);
+	}
+
+	return (FAIL);
 }

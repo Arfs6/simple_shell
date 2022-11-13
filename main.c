@@ -17,26 +17,21 @@
  */
 int main(int argc, char **argv, char **env)
 {
-	int lineNo = 1;
+	int lineNo = 0;
 	char **vector = NULL;
 	list_t *path;
 
 	path = getPathList(env);
+	argc = argc;
 
-	if (argc > 1)
-	{
-		return (execute(&(argv[1]), env, argv[0], lineNo, path, argc));
-	}
-
-	lineNo = 0;
 	while (TRUE)
 	{
-		_puts("$ ", STDOUT_FILENO);
+		_puts(STDOUT_FILENO, "$ ");
 		lineNo++;
 		vector = getCmd(path);
 		if (vector == NULL)
 			continue;
-		execute(vector, env, argv[0], lineNo, path, argc);
+		execute(vector, env, argv[0], lineNo, path);
 		_free(vector);
 	}
 
