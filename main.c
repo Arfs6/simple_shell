@@ -17,7 +17,7 @@
  */
 int main(int argc, char **argv, char **env)
 {
-	int lineNo = 0;
+	int lineNo = 0, status = 0;
 	char **vector = NULL;
 	list_t *path;
 
@@ -28,10 +28,10 @@ int main(int argc, char **argv, char **env)
 	{
 		_puts(STDOUT_FILENO, "$ ");
 		lineNo++;
-		vector = getCmd(path);
+		vector = getCmd(path, &status);
 		if (vector == NULL)
 			continue;
-		execute(vector, env, argv[0], lineNo, path);
+		status = execute(vector, env, argv[0], lineNo, path, status);
 		_free(vector);
 	}
 

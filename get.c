@@ -4,7 +4,7 @@
 
 #include "main.h"
 
-unsigned int findSize(char *str);
+unsigned int findSize(char *str, char *delm);
 
 /**
  * getCmd - get command vector. e.g. argv
@@ -14,7 +14,7 @@ unsigned int findSize(char *str);
  * NULL if no command was passed or
  * NULL if fails.
  */
-char **getCmd(list_t *path)
+char **getCmd(list_t *path, int *status)
 {
 	char *cmd, *cmdLine, **cmdVector;
 	int ret;
@@ -26,7 +26,8 @@ char **getCmd(list_t *path)
 	{
 		free(cmdLine);
 		free_list(path);
-		terminate(0);
+		_putchar('\n');
+		exit(*status);
 	}
 
 	/* remove all whitty characters */
@@ -36,11 +37,16 @@ char **getCmd(list_t *path)
 			cmdLine[i] = ' ';
 	}
 
-	size = findSize(_strdup(cmdLine));
+	size = findSize(_strdup(cmdLine), " ");
 	cmd = strtok(cmdLine, " ");
 	if (cmd == NULL)
 		return (NULL);
 	cmdVector = malloc(sizeof(*cmdVector) * (size + 1));
+	if (cmdVector == NULL)
+	{
+		*status = 2;
+		return (NULL);
+	}
 	i = 0;
 
 	do {
@@ -50,6 +56,7 @@ char **getCmd(list_t *path)
 			cmdVector[i + 1] = NULL;/* to confirm it is NULL terminated */
 			_free(cmdVector);
 			free(cmdLine);
+			*status = 2;
 			return (NULL);
 		}
 		cmd = strtok(NULL, " ");
@@ -66,19 +73,20 @@ char **getCmd(list_t *path)
  * findSize - finds the possible number of strings in the vector
  * @str: string to convert to vector
  *
+ * @delim: de delmit for the string
  * Return: size of vector
  */
-unsigned int findSize(char *str)
+unsigned int findSize(char *str, char* delim)
 {
 	unsigned int size = 0;
 
-	if (strtok(str, " ") == NULL)
+	if (strtok(str, delim) == NULL)
 	{
 		free(str);
 		return (0);
 	}
 	size++;
-	while (strtok(NULL, " "))
+	while (strtok(NULL, delim))
 		size++;
 
 	free(str);
@@ -98,6 +106,9 @@ list_t *getPathList(char **env)
 	list_t *head = NULL, *cur;
 	int i = 0, tmp = 0;
 
+	if (env == NULL || env[0] == NULL)
+		return (NULL);
+
 	path = env[i];
 	while (path != NULL)
 	{
@@ -108,10 +119,13 @@ list_t *getPathList(char **env)
 		path = env[i];
 	}
 
+	path = _strdup(path);
+	if (path == NULL)
+		return (NULL);
 	for (i = 0; i < 5; i++)
 		path[i] = ':';
 
-	i = findSize(_strdup(path));
+	i = findSize(_strdup(path), ":");
 	temp = strtok(path, ":");
 	if (temp == NULL)
 		return (NULL);
