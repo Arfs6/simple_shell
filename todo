@@ -1,5 +1,2 @@
 # this file has functions or scripts that needs to be finished before next
 #stable version of hsh will be ready
-add functionallity for notfounderr
-printError should call perror for SYSERROR
-use va_list for the last arguments

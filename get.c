@@ -8,12 +8,13 @@ unsigned int findSize(char *str);
 
 /**
  * getCmd - get command vector. e.g. argv
+ * @path: clear path if EOF was encountered
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
  * NULL if fails.
  */
-char **getCmd(void)
+char **getCmd(list_t *path)
 {
 	char *cmd, *cmdLine, **cmdVector;
 	int ret;
@@ -22,7 +23,11 @@ char **getCmd(void)
 	ret = getline(&cmdLine, &temp, stdin);
 	/* since EOF can't be stored in char, can't send the info to execute() yet */
 	if (ret == -1)
-		exit(0);
+	{
+		free(cmdLine);
+		free_list(path);
+		terminate(0);
+	}
 
 	/* remove all whitty characters */
 	for (i = 0; temp && i < temp - 1; ++i)
@@ -78,4 +83,47 @@ unsigned int findSize(char *str)
 
 	free(str);
 	return (size);
+}
+
+/**
+ * getPathList - get PATH variable from environment variable
+ * @env: environment variable
+ *
+ * Return: vector of paths in PATH
+ * NULL if fails
+ */
+list_t *getPathList(char **env)
+{
+	char *temp, *path;
+	list_t *head = NULL, *cur;
+	int i = 0, tmp = 0;
+
+	path = env[i];
+	while (path != NULL)
+	{
+		tmp = _strncmp(path, "PATH=", 5);
+		if (tmp == 0)
+		break;
+		i++;
+		path = env[i];
+	}
+
+	for (i = 0; i < 5; i++)
+		path[i] = ':';
+
+	i = findSize(_strdup(path));
+	temp = strtok(path, ":");
+	if (temp == NULL)
+		return (NULL);
+
+	i = 0;
+	while (temp != NULL)
+	{
+		cur = add_node_end(&head, temp);
+		if (cur == NULL)
+			return (NULL);
+		temp = strtok(NULL, ":");
+	}
+
+	return (head);
 }

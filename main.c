@@ -9,7 +9,7 @@
 /**
  * main - entery code for shell
  * @argc: arguments count
- * @iargv: arguments vector
+ * @argv: arguments vector
  * @env: environment variables vector
  *
  * Return: shell exited normally 0 (sucess)
@@ -17,42 +17,21 @@
  */
 int main(int argc, char **argv, char **env)
 {
-	int ret = 0, lineNo = 0;
-	struct stat statBuf;
+	int lineNo = 0;
 	char **vector = NULL;
+	list_t *path;
 
-	if (argc > 1)
-	{
-		ret = stat(argv[1], &statBuf);
-		if (ret == -1)
-		{
-			printError(NOTFOUNDERR, argv[1], 0);
-			exit(2);
-		}
-		ret = execve(argv[1], &(argv[1]), env);
-		if (ret == -1)
-		{
-			printError(SYSERR, argv[0], 0);
-			exit(2);
-		}
-	}
+	path = getPathList(env);
+	argc = argc;
 
-	lineNo = -1;
 	while (TRUE)
 	{
-		_puts("$ ", STDOUT_FILENO);
+		_puts(STDOUT_FILENO, "$ ");
 		lineNo++;
-		vector = getCmd();
+		vector = getCmd(path);
 		if (vector == NULL)
 			continue;
-		ret = stat(vector[0], &statBuf);
-		if (ret == -1)
-		{
-			printError(NOTFOUNDERR, argv[0], lineNo);
-			_free(vector);
-			continue;
-		}
-		execute(vector, env, argv[0], lineNo);
+		execute(vector, env, argv[0], lineNo, path);
 		_free(vector);
 	}
 

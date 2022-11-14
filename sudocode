@@ -1,32 +1,27 @@
-include sys/types.h
-include sys/stat.h
-include stdlib.h
-include unistd.h
+{
+int isBuiltin(char *cmd)
+char builtinList[2][] = "exit", NULL;
+int i = 0, ret = 0
 
-int execute(int ac, char **av, char **env)
-declare statBuf pointer of type struct stat
-declare a vector "vector" to store the vectore in
-declare an int ret to store getCmd status
-declare an int num to store the current line
-if ac > 1
-	STAT av[1], statBuf
-	if fails, return status
-	execve av[1], &av[1], env
-	if fails, return status
-
-run an infinite while loop
-print $
-	call getCmd and store result in vector
-if ret = TRUE, call printError and continue loop
-else if vector = NULL, continue loop
-use stat to check if the file exist
-if it doesn't exist, print appropriate error and continue
-fork the current process
-if this is the child process, execute what is in vector
-	if it fails to execute, return status to parent process
-if this is the parent process, wait for child process
-	if child process fails to execute, ...
-free vector
-go back to the top of the loop.
-
+for i = 0; builtinList[i]; i++
+ret = _strncmp(builtinList[i], cmd, strlen(cmd))
+if ret = 0 && strlen(builtinList[i]) == strlen(cmd)
+executeBuiltin(builtinList[i])
 return (0)
+
+return -1
+}
+
+{
+void (terminate(int status)
+putchar('\n')
+exit(status)
+}
+
+{
+void printEnv(char **env)
+int i = 0
+
+for (i = 0; env[i]; i++)
+_puts(STDOUT_FILENO, env[i])
+}
