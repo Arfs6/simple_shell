@@ -47,6 +47,7 @@ int checkAccess(char *path);
 /* get.c */
 char **getCmd(list_t *path);
 list_t *getPathList(char **env);
+char *getVariable(char *variable, char **env);
 
 /* put.c */
 int _putchar(char c);

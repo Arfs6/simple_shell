@@ -127,3 +127,34 @@ list_t *getPathList(char **env)
 
 	return (head);
 }
+
+/**
+ * getVariable - get a variable in environment variable
+ * @variable: variable to search for
+ * @env: environment variable
+ *
+ * Return: pointer to value part of vaiable. i.e. the part after =
+ * NULL: variable was not found
+ */
+char *getVariable(char *variable, char **env)
+{
+	char *value = NULL;
+	int i = 0, temp;
+
+	if (env == NULL)
+		return (NULL);
+
+	temp = _strlen(variable);
+	variable[temp] = '=';/* to match exact variable */
+	for (i = 0; env[i]; i++)
+	{
+		if (_strncmp(variable, env[i], temp + 1) == 0)
+		{
+			/* found variable */
+			variable[temp] = '\0';
+			return (&(env[i][temp]));
+		}
+	}
+
+	return (NULL);/* not found */
+}
