@@ -72,4 +72,13 @@ void free_list(list_t *head);
 /* print.c */
 int _dprintf(int fd, char *format, ...);
 
+/* getline.c */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void assign_lineptr(char **lineptr, size_t *n, char *buffer, size_t b);
+ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
+
+/* strtok.c */
+int _strtok_validate(char *str, char *backup, char *delm);
+char *_strtok(char *str, char *delm);
+
 #endif /* MAIN_H */
