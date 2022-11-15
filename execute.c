@@ -20,51 +20,52 @@
  * Return: -1 if fork or execve fails
  */
 int execute(char *argv[], char *env[], char *execName,
-		int lineNo, list_t *path)
+		int lineNo, list_t *path, int status)
 {
-	int ret = 0, status = 0;
+	int ret = 0;
 	pid_t myPid;
 
-	if (execBuiltin(argv, env) == 0)
-		return (0);
+	ret = execBuiltin(argv, env, status, path, execName, lineNo);
+	if (ret >= SUCCESS)
+		return (ret);
 	if (setPath(argv, path) == -1)
 	{
 		_dprintf(MEMERR, execName, lineNo);
-		return (1);
+		return (2);
 	}
 	ret = checkAccess(argv[0]);
 	if (ret == -1)
 	{
 		_dprintf(NOTFOUNDERR, execName, lineNo, argv[0]);
-		return (1);
+		return (2);
 	}
 	else if (ret == -2)
 	{
 		_dprintf(PERMERR, execName, lineNo, argv[0]);
 		return (2);
 	}
-
-		myPid = fork();
-		if (myPid == -1)
+	myPid = fork();
+	if (myPid == -1)
+	{
+		_dprintf(SYSERR, execName, lineNo);
+		perror(NULL);
+		return (2);
+	}
+	if (myPid == 0)
+	{
+		ret = execve(argv[0], argv, env);
+		if (ret == -1)
 		{
 			_dprintf(SYSERR, execName, lineNo);
 			perror(NULL);
+			return (ret);
 		}
-		if (myPid == 0)
-		{
-			ret = execve(argv[0], argv, env);
-			if (ret == -1)
-			{
-				_dprintf(SYSERR, execName, lineNo);
-				perror(NULL);
-				return (ret);
-			}
-		}
-		else
-			wait(&status);
-
-		return (status);
 	}
+	else
+		wait(&status);
+
+	return (status);
+}
 
 /**
  * setPath - set path for executable
@@ -81,6 +82,9 @@ int execute(char *argv[], char *env[], char *execName,
 	list_t *temp = path;
 
 	if (isSlash(*cmd) == 0)
+		return (SUCCESS);
+
+	if (path == NULL)
 		return (SUCCESS);
 
 	while (temp)

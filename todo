@@ -1,2 +1,3 @@
 # this file has functions or scripts that needs to be finished before next
 #stable version of hsh will be ready
+#exit should free path and vector
