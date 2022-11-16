@@ -7,11 +7,16 @@
  * execBuiltin - execute builtin commands
  * @argv: command vector
  * @env: environment variable
+ * @status: status
+ * @path: PATH variable
+ * @execName: executable name
+ * @lineNo: line number
  *
  * Return: 0: command is builtin and was executed (SUCCESS)
  * -1:acommand is not builtin (FAIL)
  */
-int execBuiltin(char **argv, char **env, int status, list_t *path, char *execName, int lineNo)
+int execBuiltin(char **argv, char **env, int status,
+		list_t *path, char *execName, int lineNo)
 {
 	char *builtinList[] = {"exit", "env"};
 
@@ -36,7 +41,8 @@ int execBuiltin(char **argv, char **env, int status, list_t *path, char *execNam
  *
  * Return: 2: illegal number to terminate with
  */
-int terminate(char **argv, int status, list_t *path, char *execName, int lineNo)
+int terminate(char **argv, int status, list_t *path,
+		char *execName, int lineNo)
 {
 	int num = 0;
 
@@ -50,7 +56,7 @@ int terminate(char **argv, int status, list_t *path, char *execName, int lineNo)
 	if (strToInt(argv[1], &num) == FAIL)
 	{
 		_dprintf(INVNUMERR, execName, lineNo, argv[1]);
-		return 2;
+		return (2);
 	}
 
 	free_list(path);

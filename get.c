@@ -9,6 +9,7 @@ unsigned int findSize(char *str, char *delm);
 /**
  * getCmd - get command vector. e.g. argv
  * @path: clear path if EOF was encountered
+ * @status: exit with status if eof was encountered
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
@@ -76,7 +77,7 @@ char **getCmd(list_t *path, int *status)
  * @delim: de delmit for the string
  * Return: size of vector
  */
-unsigned int findSize(char *str, char* delim)
+unsigned int findSize(char *str, char *delim)
 {
 	unsigned int size = 0;
 

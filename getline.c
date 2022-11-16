@@ -124,17 +124,13 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 			input++;
 			break;
 		}
-
 		if (input >= 120)
 			buffer = _realloc(buffer, input, input + 1);
-
 		buffer[input] = c;
 		input++;
 	}
 	buffer[input] = '\0';
-
 	assign_lineptr(lineptr, n, buffer, input);
-
 	ret = input;
 	if (r != 0)
 		input = 0;

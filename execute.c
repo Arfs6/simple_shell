@@ -18,6 +18,7 @@ int _execve(char *argv[], char *env[], char *execName, int lineNo);
  * @execName: name of shell executable
  * @lineNo: current line
  * @path: path to search for executables
+ * @status: status
  *
  * Return: -1 if fork or execve fails
  */
