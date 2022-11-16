@@ -7,6 +7,8 @@
 
 #include "main.h"
 
+int _execve(char *argv[], char *env[], char *execName, int lineNo);
+
 	int setPath(char **cmd, list_t *path);
 
 /**
@@ -23,7 +25,6 @@ int execute(char *argv[], char *env[], char *execName,
 		int lineNo, list_t *path, int status)
 {
 	int ret = 0;
-	pid_t myPid;
 
 	ret = execBuiltin(argv, env, status, path, execName, lineNo);
 	if (ret >= SUCCESS)
@@ -44,6 +45,26 @@ int execute(char *argv[], char *env[], char *execName,
 		_dprintf(PERMERR, execName, lineNo, argv[0]);
 		return (2);
 	}
+
+	status = _execve(argv, env, execName, lineNo);
+	return (status);
+}
+
+/**
+ * _execve - execute an executable
+ * @argv: command vector
+ * @env: environment variable
+ * @execName: esecutable name
+ * @lineNo: current line in shell
+ *
+ * Return: 0 success
+ * -1 fail
+ */
+int _execve(char *argv[], char *env[], char *execName, int lineNo)
+{
+	pid_t myPid;
+	int status = 0, ret = 0;
+
 	myPid = fork();
 	if (myPid == -1)
 	{
@@ -65,49 +86,4 @@ int execute(char *argv[], char *env[], char *execName,
 		wait(&status);
 
 	return (status);
-}
-
-/**
- * setPath - set path for executable
- * @cmd: command to search for
- * @path: link list to PATH variable
- *
- * Return: 0: right path set
- * -1: malloc fails
- */
-	int setPath(char **cmd, list_t *path)
-{
-	int i = 0;
-	char *buf;
-	list_t *temp = path;
-
-	if (isSlash(*cmd) == 0)
-		return (SUCCESS);
-
-	if (path == NULL)
-		return (SUCCESS);
-
-	while (temp)
-	{
-		buf = malloc(sizeof(char) * (_strlen(*cmd) + _strlen(temp->dir) + 2));
-		if (buf == NULL)
-			return (FAIL);
-
-		i = 0;
-		i = _strcat(temp->dir, buf, i);
-		if (buf[i - 1] != '/')
-			i = _strcat("/", buf, i);
-		i = _strcat(*cmd, buf, i);
-		if (access(buf, F_OK) == 0)
-		{
-			free(*cmd);
-			*cmd = buf;
-			return (SUCCESS);
-		}
-
-		free(buf);
-		temp = temp->next;
-	}
-
-	return (SUCCESS);
 }

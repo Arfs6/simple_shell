@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "main.h"
 
@@ -34,6 +35,51 @@ int strToInt(char *str, int *num)
 	}
 
 	strRev(str);
+
+	return (SUCCESS);
+}
+
+/**
+ * setPath - set path for executable
+ * @cmd: command to search for
+ * @path: link list to PATH variable
+ *
+ * Return: 0: right path set
+ * -1: malloc fails
+ */
+	int setPath(char **cmd, list_t *path)
+{
+	int i = 0;
+	char *buf;
+	list_t *temp = path;
+
+	if (isSlash(*cmd) == 0)
+		return (SUCCESS);
+
+	if (path == NULL)
+		return (SUCCESS);
+
+	while (temp)
+	{
+		buf = malloc(sizeof(char) * (_strlen(*cmd) + _strlen(temp->dir) + 2));
+		if (buf == NULL)
+			return (FAIL);
+
+		i = 0;
+		i = _strcat(temp->dir, buf, i);
+		if (buf[i - 1] != '/')
+			i = _strcat("/", buf, i);
+		i = _strcat(*cmd, buf, i);
+		if (access(buf, F_OK) == 0)
+		{
+			free(*cmd);
+			*cmd = buf;
+			return (SUCCESS);
+		}
+
+		free(buf);
+		temp = temp->next;
+	}
 
 	return (SUCCESS);
 }

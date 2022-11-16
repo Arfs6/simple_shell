@@ -20,7 +20,7 @@ char **getCmd(list_t *path, int *status)
 	int ret;
 	size_t size = 0, temp = 0, i = 0;
 
-	ret = _getline(&cmdLine, &temp, stdin);
+	ret = getline(&cmdLine, &temp, stdin);
 	/* since EOF can't be stored in char, can't send the info to execute() yet */
 	if (ret == -1)
 	{
@@ -38,7 +38,7 @@ char **getCmd(list_t *path, int *status)
 	}
 
 	size = findSize(_strdup(cmdLine), " ");
-	cmd = _strtok(cmdLine, " ");
+	cmd = strtok(cmdLine, " ");
 	if (cmd == NULL)
 		return (NULL);
 	cmdVector = malloc(sizeof(*cmdVector) * (size + 1));
@@ -59,7 +59,7 @@ char **getCmd(list_t *path, int *status)
 			*status = 2;
 			return (NULL);
 		}
-		cmd = _strtok(NULL, " ");
+		cmd = strtok(NULL, " ");
 		i++;
 	} while (cmd);
 	cmdVector[i] = NULL;
@@ -80,13 +80,13 @@ unsigned int findSize(char *str, char* delim)
 {
 	unsigned int size = 0;
 
-	if (_strtok(str, delim) == NULL)
+	if (strtok(str, delim) == NULL)
 	{
 		free(str);
 		return (0);
 	}
 	size++;
-	while (_strtok(NULL, delim))
+	while (strtok(NULL, delim))
 		size++;
 
 	free(str);
@@ -126,7 +126,7 @@ list_t *getPathList(char **env)
 		path[i] = ':';
 
 	i = findSize(_strdup(path), ":");
-	temp = _strtok(path, ":");
+	temp = strtok(path, ":");
 	if (temp == NULL)
 		return (NULL);
 
@@ -136,7 +136,7 @@ list_t *getPathList(char **env)
 		cur = add_node_end(&head, temp);
 		if (cur == NULL)
 			return (NULL);
-		temp = _strtok(NULL, ":");
+		temp = strtok(NULL, ":");
 	}
 
 	return (head);
