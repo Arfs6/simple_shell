@@ -37,3 +37,58 @@ int strToInt(char *str, int *num)
 
 	return (SUCCESS);
 }
+
+/**
+ * initEnv - initialize environment variable
+ * @ev: environment variable
+ *
+ * Return: environment variable
+ */
+char **initEnv(char **ev)
+{
+	int i = 0;
+	char **env;
+
+	if (ev == NULL || ev[0] == NULL)
+		return (NULL);
+
+	for (i = 0; ev[i]; ++i)
+		;
+
+	env = malloc(sizeof(*env) * (i + 1));
+	if (env == NULL)
+		return (NULL);
+
+	for (i = 0; ev[i]; ++i)
+	{
+		env[i] = _strdup(ev[i]);
+		if (env[i] == NULL)
+		{
+			_free(NULL, env);
+			return (NULL);
+		}
+	}
+	env[i] = NULL;
+
+	return (env);
+}
+
+/**
+ * useArg - nullifies unused argument warning
+ * @argv: command argument
+ * @env: environment variable
+ * @status: status of last executed command
+ * @path: list of dirs in PATH variable
+ * @execName: name of shell executable
+ * @lineNo: current line in shell
+ */
+void useArg(char *argv[], char *env[], int status,
+		list_t *path, char *execName, int lineNo)
+{
+	argv = argv;
+	env = env;
+	status = status;
+	path = path;
+	execName = execName;
+	lineNo = lineNo;
+}

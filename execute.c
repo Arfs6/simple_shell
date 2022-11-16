@@ -20,7 +20,7 @@
  * Return: -1 if fork or execve fails
  */
 int execute(char *argv[], char *env[], char *execName,
-		int lineNo, list_t *path, int status)
+		int lineNo, list_t **path, int status)
 {
 	int ret = 0;
 	pid_t myPid;
@@ -28,7 +28,7 @@ int execute(char *argv[], char *env[], char *execName,
 	ret = execBuiltin(argv, env, status, path, execName, lineNo);
 	if (ret >= SUCCESS)
 		return (ret);
-	if (setPath(argv, path) == -1)
+	if (setPath(argv, *path) == -1)
 	{
 		_dprintf(MEMERR, execName, lineNo);
 		return (2);
@@ -84,10 +84,10 @@ int execute(char *argv[], char *env[], char *execName,
 	if (isSlash(*cmd) == 0)
 		return (SUCCESS);
 
-	if (path == NULL)
+	if (!path)
 		return (SUCCESS);
 
-	while (temp)
+	while (temp && temp->dir)
 	{
 		buf = malloc(sizeof(char) * (_strlen(*cmd) + _strlen(temp->dir) + 2));
 		if (buf == NULL)

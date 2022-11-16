@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <stddef.h>
+#include <stdio.h>
 
 /* macros */
 #define TRUE (1)
@@ -26,20 +27,40 @@ struct list_s
 	struct list_s *next;
 };
 typedef struct list_s list_t;
+/**
+ * struct builtin_s - struct to store builtin commands
+ * @cmd: command string
+ * @func: command function
+ */
+struct builtin_s
+{
+	char *cmd;
+	int (*func)(char *argv[], char *env[], int status,
+			list_t **path,
+			char *execName, int lineNo);
+};
+typedef struct builtin_s builtin_t;
 
 /* comments above prototypes states which files the source code is in */
 
 /* execute.c */
 int execute(char *argv[], char *env[], char *execName, int lineNo, list_t
-		*path, int status);
+		**path, int status);
 
 /* commands.c */
-int execBuiltin(char **argv, char **env, int status, list_t *path, char *execName, int lineNo);
-int terminate(char **argv, int status, list_t *path, char *execName, int lineNo);
-void printEnv(char **env);
+int execBuiltin(char **argv, char **env, int status,
+		list_t **path, char *execName, int lineNo);
+int terminate(char *argv[], char *env[],
+		int status, list_t **path, char *execName, int lineNo);
+int printEnv(char *argv[], char *env[], int status,
+		list_t **path, char *execName, int lineNo);
+
+/* setenv.c */
+int unsetEnv(char *argv[], char *env[], int status, list_t **path,
+		char *execName, int lineNo);
 
 /* functions0.c */
-void _free(char **);
+void _free(char **vector, char **env);
 int intcat(int num, char *dest, int len);
 void _memset(char *mem, size_t len);
 int isSlash(char *str);
@@ -47,12 +68,14 @@ int checkAccess(char *path);
 
 /* functions1.c */
 int strToInt(char *str, int *num);
-
+char **initEnv(char **ev);
+void useArg(char *argv[], char *env[], int status,
+		list_t *path, char *execName, int lineNo);
 
 /* get.c */
-char **getCmd(list_t *path, int *status);
+char **getCmd(char **env, list_t **path, int *status, char *execName, int lineNo);
 list_t *getPathList(char **env);
-char *getVariable(char *variable, char **env);
+int getVariable(char *variable, char **env);
 
 /* put.c */
 int _putchar(char c);
@@ -68,7 +91,7 @@ int _strncmp(char *str1, char *str2, int index);
 
 /* linklists.c */
 list_t *add_node_end(list_t **head, const char *str);
-void free_list(list_t *head);
+void free_list(list_t **head);
 
 /* print.c */
 int _dprintf(int fd, char *format, ...);

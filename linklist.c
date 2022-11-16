@@ -43,21 +43,22 @@ list_t *add_node_end(list_t **head, const char *str)
  * free_list - free a list_t list
  * @head: start of list
 */
-void free_list(list_t *head)
+void free_list(list_t **head)
 {
-	list_t *temp;
+	list_t *temp, *hold;
 
-	if (head == NULL)
+	if (*head == NULL)
 		return;
 
-	while (head->next != NULL)
+	hold = *head;
+	while (TRUE)
 	{
-		temp = head->next;
-		if (head->dir)
-			free(head->dir);
-		free(head);
-		head = temp;
+		if (hold == NULL)
+			break;
+		temp = hold;
+		hold = hold->next;
+		if (temp->dir)
+			free(temp->dir);
+		free(temp);
 	}
-	free(head->dir);
-	free(head);
 }

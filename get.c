@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "main.h"
 
@@ -8,24 +9,27 @@ unsigned int findSize(char *str, char *delm);
 
 /**
  * getCmd - get command vector. e.g. argv
+ * @env: clear env if EOF was encountered
  * @path: clear path if EOF was encountered
+ * @status: status to exit if EOF was encountered
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
  * NULL if fails.
  */
-char **getCmd(list_t *path, int *status)
+char **getCmd(char **env, list_t **path, int *status, char *execName, int lineNo)
 {
 	char *cmd, *cmdLine, **cmdVector;
 	int ret;
 	size_t size = 0, temp = 0, i = 0;
 
-	ret = _getline(&cmdLine, &temp, stdin);
+	ret = getline(&cmdLine, &temp, stdin);
 	/* since EOF can't be stored in char, can't send the info to execute() yet */
 	if (ret == -1)
 	{
 		free(cmdLine);
 		free_list(path);
+		_free(NULL, env);
 		_putchar('\n');
 		exit(*status);
 	}
@@ -38,13 +42,14 @@ char **getCmd(list_t *path, int *status)
 	}
 
 	size = findSize(_strdup(cmdLine), " ");
-	cmd = _strtok(cmdLine, " ");
+	cmd = strtok(cmdLine, " ");
 	if (cmd == NULL)
 		return (NULL);
 	cmdVector = malloc(sizeof(*cmdVector) * (size + 1));
 	if (cmdVector == NULL)
 	{
 		*status = 2;
+		_dprintf(MEMERR, execName, lineNo);
 		return (NULL);
 	}
 	i = 0;
@@ -54,12 +59,13 @@ char **getCmd(list_t *path, int *status)
 		if (cmdVector[i] == NULL)
 		{
 			cmdVector[i + 1] = NULL;/* to confirm it is NULL terminated */
-			_free(cmdVector);
+			_free(cmdVector, NULL);
 			free(cmdLine);
+		_dprintf(MEMERR, execName, lineNo);
 			*status = 2;
 			return (NULL);
 		}
-		cmd = _strtok(NULL, " ");
+		cmd = strtok(NULL, " ");
 		i++;
 	} while (cmd);
 	cmdVector[i] = NULL;
@@ -80,13 +86,13 @@ unsigned int findSize(char *str, char* delim)
 {
 	unsigned int size = 0;
 
-	if (_strtok(str, delim) == NULL)
+	if (strtok(str, delim) == NULL)
 	{
 		free(str);
 		return (0);
 	}
 	size++;
-	while (_strtok(NULL, delim))
+	while (strtok(NULL, delim))
 		size++;
 
 	free(str);
@@ -102,23 +108,17 @@ unsigned int findSize(char *str, char* delim)
  */
 list_t *getPathList(char **env)
 {
-	char *temp, *path;
+	char *temp, *path = NULL;
 	list_t *head = NULL, *cur;
 	int i = 0, tmp = 0;
 
 	if (env == NULL || env[0] == NULL)
 		return (NULL);
 
-	path = env[i];
-	while (path != NULL)
-	{
-		tmp = _strncmp(path, "PATH=", 5);
-		if (tmp == 0)
-		break;
-		i++;
-		path = env[i];
-	}
-
+	tmp = getVariable("PATH", env);
+	if (tmp == -1)
+		return (NULL);
+	path = env[tmp];
 	path = _strdup(path);
 	if (path == NULL)
 		return (NULL);
@@ -126,7 +126,7 @@ list_t *getPathList(char **env)
 		path[i] = ':';
 
 	i = findSize(_strdup(path), ":");
-	temp = _strtok(path, ":");
+	temp = strtok(path, ":");
 	if (temp == NULL)
 		return (NULL);
 
@@ -135,10 +135,15 @@ list_t *getPathList(char **env)
 	{
 		cur = add_node_end(&head, temp);
 		if (cur == NULL)
+		{
+			free(path);
+			free_list(&head);
 			return (NULL);
-		temp = _strtok(NULL, ":");
+		}
+		temp = strtok(NULL, ":");
 	}
 
+	free(path);
 	return (head);
 }
 
@@ -147,28 +152,25 @@ list_t *getPathList(char **env)
  * @variable: variable to search for
  * @env: environment variable
  *
- * Return: pointer to value part of vaiable. i.e. the part after =
- * NULL: variable was not found
+ * Return: >=0: index of variable
+ * -1: not found
  */
-char *getVariable(char *variable, char **env)
+int getVariable(char *variable, char **env)
 {
-	char *value = NULL;
 	int i = 0, temp;
 
-	if (env == NULL)
-		return (NULL);
+	if (env == NULL || variable == NULL)
+		return (-1);
 
 	temp = _strlen(variable);
-	variable[temp] = '=';/* to match exact variable */
 	for (i = 0; env[i]; i++)
 	{
-		if (_strncmp(variable, env[i], temp + 1) == 0)
+		if (_strncmp(variable, env[i], temp) == 0
+				&& env[i][temp] == '=')
 		{
-			/* found variable */
-			variable[temp] = '\0';
-			return (&(env[i][temp]));
+			return (i);
 		}
 	}
 
-	return (NULL);/* not found */
+	return (-1);/* not found */
 }
