@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 	while (TRUE)
 	{
 		if (argc == 1)
-			_puts(STDOUT_FILENO, "$ ");
+			_puts(STDOUT_FILENO, "($) ");
 		lineNo++;
 		vector = getCmd(&path, &status, argv[0], lineNo);
 		if (vector == NULL)
