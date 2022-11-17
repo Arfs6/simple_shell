@@ -9,7 +9,6 @@ unsigned int findSize(char *str, char *delm);
 
 /**
  * getCmd - get command vector. e.g. argv
- * @env: clear env if EOF was encountered
  * @path: clear path if EOF was encountered
  * @status: status to exit if EOF was encountered
  *
@@ -17,7 +16,7 @@ unsigned int findSize(char *str, char *delm);
  * NULL if no command was passed or
  * NULL if fails.
  */
-char **getCmd(char **env, list_t **path, int *status, char *execName, int lineNo)
+char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 {
 	char *cmd, *cmdLine, **cmdVector;
 	int ret;
@@ -29,7 +28,7 @@ char **getCmd(char **env, list_t **path, int *status, char *execName, int lineNo
 	{
 		free(cmdLine);
 		free_list(path);
-		_free(NULL, env);
+		_free(NULL, environ);
 		_putchar('\n');
 		exit(*status);
 	}
@@ -101,24 +100,23 @@ unsigned int findSize(char *str, char* delim)
 
 /**
  * getPathList - get PATH variable from environment variable
- * @env: environment variable
  *
  * Return: vector of paths in PATH
  * NULL if fails
  */
-list_t *getPathList(char **env)
+list_t *getPathList(void)
 {
 	char *temp, *path = NULL;
 	list_t *head = NULL, *cur;
 	int i = 0, tmp = 0;
 
-	if (env == NULL || env[0] == NULL)
+	if (environ == NULL || environ[0] == NULL)
 		return (NULL);
 
-	tmp = getVariable("PATH", env);
+	tmp = getVariable("PATH");
 	if (tmp == -1)
 		return (NULL);
-	path = env[tmp];
+	path = environ[tmp];
 	path = _strdup(path);
 	if (path == NULL)
 		return (NULL);
@@ -150,23 +148,22 @@ list_t *getPathList(char **env)
 /**
  * getVariable - get a variable in environment variable
  * @variable: variable to search for
- * @env: environment variable
  *
  * Return: >=0: index of variable
  * -1: not found
  */
-int getVariable(char *variable, char **env)
+int getVariable(char *variable)
 {
 	int i = 0, temp;
 
-	if (env == NULL || variable == NULL)
+	if (environ == NULL || environ[0] == NULL || variable == NULL)
 		return (-1);
 
 	temp = _strlen(variable);
-	for (i = 0; env[i]; i++)
+	for (i = 0; environ[i]; i++)
 	{
-		if (_strncmp(variable, env[i], temp) == 0
-				&& env[i][temp] == '=')
+		if (_strncmp(variable, environ[i], temp) == 0
+				&& environ[i][temp] == '=')
 		{
 			return (i);
 		}

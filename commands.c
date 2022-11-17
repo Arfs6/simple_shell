@@ -6,7 +6,6 @@
 /**
  * execBuiltin - execute builtin commands
  * @argv: command vector
- * @env: environment variable
  * @status: status of last command
  * @path: link list for directories in PATH variable
  * @execName: name of executable
@@ -15,7 +14,7 @@
  * Return: 0: command is builtin and was executed (SUCCESS)
  * -1:command is not builtin (FAIL)
  */
-int execBuiltin(char **argv, char **env, int status,
+int execBuiltin(char **argv, int status,
 		list_t **path, char *execName, int lineNo)
 {
 	builtin_t builtinList[] = {
@@ -30,7 +29,7 @@ int execBuiltin(char **argv, char **env, int status,
 		ret = _strncmp(builtinList[i].cmd, argv[0], len);
 		if (ret == 0)
 		{
-			ret = builtinList[i].func(argv, env, status, path, execName, lineNo);
+			ret = builtinList[i].func(argv, status, path, execName, lineNo);
 			return (ret);
 		}
 	}
@@ -41,7 +40,6 @@ int execBuiltin(char **argv, char **env, int status,
 /**
  * terminate - terminates the shell
  * @argv: argument vector
- * @env: environment variable to free before exiting shell
  * @status: status to exit with
  * @path: PATH environment variable
  * @execName: name of executable
@@ -49,15 +47,15 @@ int execBuiltin(char **argv, char **env, int status,
  *
  * Return: 2: illegal number to terminate with
  */
-int terminate(char *argv[], char *env[],
-		int status, list_t **path, char *execName, int lineNo)
+int terminate(char *argv[], int status,
+		list_t **path, char *execName, int lineNo)
 {
 	int num = 0;
 
 	if (argv[1] == NULL)
 	{
 		free_list(path);
-		_free(argv, env);
+		_free(argv, environ);
 		exit(status);
 	}
 
@@ -68,36 +66,35 @@ int terminate(char *argv[], char *env[],
 	}
 
 	free_list(path);
-	_free(argv, env);
+	_free(argv, environ);
 	exit(num);
 }
 
 /**
  * printEnv - print environment variable
  * @argv: command vector
- * @env: environment variable
  * @status: status of last executed command
  * @path: link list for dir in PATH variable
  * @execName: name of executable the shell was called with
  * @lineNo: current line number in shell
  */
-int printEnv(char *argv[], char *env[], int status,
+int printEnv(char *argv[], int status,
 		list_t **path, char *execName, int lineNo)
 {
 	int i = 0;
 
 	/* supressing unused arguments warning */
-	useArg(argv, NULL, status, path, execName, lineNo);
+	useArg(argv, status, path, execName, lineNo);
 
-	if (env == NULL || env[i] == NULL)
+	if (environ == NULL || environ[i] == NULL)
 	{
 		_putchar('\n');
 		return (0);
 	}
 
-	for (i = 0; env[i]; ++i)
+	for (i = 0; environ[i]; ++i)
 	{
-	_puts(STDOUT_FILENO, env[i]);
+	_puts(STDOUT_FILENO, environ[i]);
 	_putchar('\n');
 	}
 

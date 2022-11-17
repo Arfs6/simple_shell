@@ -14,7 +14,9 @@
 #define MEMERR STDERR_FILENO, "%s: %i: cannot allocate memory\n"
 #define NOTFOUNDERR STDERR_FILENO, "%s: %i: %s: not found\n"
 #define PERMERR STDERR_FILENO, "%s: %i: %s: Permission denied\n"
-#define INVNUMERR STDERR_FILENO, "%s: %i: exit: Illegal number: %i\n"
+#define INVNUMERR STDERR_FILENO, "%s: %i: exit: Illegal number: %s\n"
+
+extern char **environ;
 
 /**
  * struct list_s - link list to store PATH variable dirs
@@ -35,7 +37,7 @@ typedef struct list_s list_t;
 struct builtin_s
 {
 	char *cmd;
-	int (*func)(char *argv[], char *env[], int status,
+	int (*func)(char *argv[], int status,
 			list_t **path,
 			char *execName, int lineNo);
 };
@@ -44,19 +46,19 @@ typedef struct builtin_s builtin_t;
 /* comments above prototypes states which files the source code is in */
 
 /* execute.c */
-int execute(char *argv[], char *env[], char *execName, int lineNo, list_t
+int execute(char *argv[], char *execName, int lineNo, list_t
 		**path, int status);
 
 /* commands.c */
-int execBuiltin(char **argv, char **env, int status,
+int execBuiltin(char **argv, int status,
 		list_t **path, char *execName, int lineNo);
-int terminate(char *argv[], char *env[],
-		int status, list_t **path, char *execName, int lineNo);
-int printEnv(char *argv[], char *env[], int status,
+int terminate(char *argv[], int status,
+		list_t **path, char *execName, int lineNo);
+int printEnv(char *argv[], int status,
 		list_t **path, char *execName, int lineNo);
 
 /* setenv.c */
-int unsetEnv(char *argv[], char *env[], int status, list_t **path,
+int unsetEnv(char *argv[], int status, list_t **path,
 		char *execName, int lineNo);
 
 /* functions0.c */
@@ -68,14 +70,15 @@ int checkAccess(char *path);
 
 /* functions1.c */
 int strToInt(char *str, int *num);
-char **initEnv(char **ev);
-void useArg(char *argv[], char *env[], int status,
-		list_t *path, char *execName, int lineNo);
+void initEnv(void);
+void useArg(char *argv[], int status,
+		list_t **path, char *execName, int lineNo);
 
 /* get.c */
-char **getCmd(char **env, list_t **path, int *status, char *execName, int lineNo);
-list_t *getPathList(char **env);
-int getVariable(char *variable, char **env);
+char **getCmd(list_t **path, int *status,
+		char *execName, int lineNo);
+list_t *getPathList(void);
+int getVariable(char *variable);
 
 /* put.c */
 int _putchar(char c);
