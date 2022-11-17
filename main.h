@@ -15,6 +15,8 @@
 #define PERMERR STDERR_FILENO, "%s: %i: %s: Permission denied\n"
 #define INVNUMERR STDERR_FILENO, "%s: %i: exit: Illegal number: %i\n"
 
+extern char **environ
+
 /**
  * struct list_s - link list to store PATH variable dirs
  * @dir: string containing directory
@@ -34,8 +36,10 @@ int execute(char *argv[], char *env[], char *execName, int lineNo, list_t
 		*path, int status);
 
 /* commands.c */
-int execBuiltin(char **argv, char **env, int status, list_t *path, char *execName, int lineNo);
-int terminate(char **argv, int status, list_t *path, char *execName, int lineNo);
+int execBuiltin(char **argv, char **env, int status,
+		list_t *path, char *execName, int lineNo);
+int terminate(char **argv, int status,
+		list_t *path, char *execName, int lineNo);
 void printEnv(char **env);
 
 /* functions0.c */
