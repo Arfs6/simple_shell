@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "main.h"
 
@@ -9,13 +10,13 @@ unsigned int findSize(char *str, char *delm);
 /**
  * getCmd - get command vector. e.g. argv
  * @path: clear path if EOF was encountered
- * @status: exit with status if eof was encountered
+ * @status: status to exit if EOF was encountered
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
  * NULL if fails.
  */
-char **getCmd(list_t *path, int *status)
+char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 {
 	char *cmd, *cmdLine, **cmdVector;
 	int ret;
@@ -27,6 +28,7 @@ char **getCmd(list_t *path, int *status)
 	{
 		free(cmdLine);
 		free_list(path);
+		_free(NULL, environ);
 		_putchar('\n');
 		exit(*status);
 	}
@@ -46,6 +48,7 @@ char **getCmd(list_t *path, int *status)
 	if (cmdVector == NULL)
 	{
 		*status = 2;
+		_dprintf(MEMERR, execName, lineNo);
 		return (NULL);
 	}
 	i = 0;
@@ -55,8 +58,9 @@ char **getCmd(list_t *path, int *status)
 		if (cmdVector[i] == NULL)
 		{
 			cmdVector[i + 1] = NULL;/* to confirm it is NULL terminated */
-			_free(cmdVector);
+			_free(cmdVector, NULL);
 			free(cmdLine);
+		_dprintf(MEMERR, execName, lineNo);
 			*status = 2;
 			return (NULL);
 		}
@@ -96,30 +100,23 @@ unsigned int findSize(char *str, char *delim)
 
 /**
  * getPathList - get PATH variable from environment variable
- * @env: environment variable
  *
  * Return: vector of paths in PATH
  * NULL if fails
  */
-list_t *getPathList(char **env)
+list_t *getPathList(void)
 {
-	char *temp, *path;
+	char *temp, *path = NULL;
 	list_t *head = NULL, *cur;
 	int i = 0, tmp = 0;
 
-	if (env == NULL || env[0] == NULL)
+	if (environ == NULL || environ[0] == NULL)
 		return (NULL);
 
-	path = env[i];
-	while (path != NULL)
-	{
-		tmp = _strncmp(path, "PATH=", 5);
-		if (tmp == 0)
-		break;
-		i++;
-		path = env[i];
-	}
-
+	tmp = getVariable("PATH");
+	if (tmp == -1)
+		return (NULL);
+	path = environ[tmp];
 	path = _strdup(path);
 	if (path == NULL)
 		return (NULL);
@@ -136,9 +133,41 @@ list_t *getPathList(char **env)
 	{
 		cur = add_node_end(&head, temp);
 		if (cur == NULL)
+		{
+			free(path);
+			free_list(&head);
 			return (NULL);
+		}
 		temp = strtok(NULL, ":");
 	}
 
+	free(path);
 	return (head);
+}
+
+/**
+ * getVariable - get a variable in environment variable
+ * @variable: variable to search for
+ *
+ * Return: >=0: index of variable
+ * -1: not found
+ */
+int getVariable(char *variable)
+{
+	int i = 0, temp;
+
+	if (environ == NULL || environ[0] == NULL || variable == NULL)
+		return (-1);
+
+	temp = _strlen(variable);
+	for (i = 0; environ[i]; i++)
+	{
+		if (_strncmp(variable, environ[i], temp) == 0
+				&& environ[i][temp] == '=')
+		{
+			return (i);
+		}
+	}
+
+	return (-1);/* not found */
 }

@@ -7,18 +7,35 @@
  * _free - free a vector
  * @vector: vector to free
  */
-void _free(char **vector)
+void _free(char **vector, char **env)
 {
 	unsigned int i = 0;
 
-	while (vector[i])
+	while (vector != NULL && vector[i] != NULL)
 	{
 		free(vector[i]);
 		i++;
+		if (vector[i] == NULL)
+		{
+			free(vector);
+			vector = NULL;
+			break;
+		}
 	}
 
-	free(vector);
-	vector = NULL;
+	i = 0;
+	while (env && env[i])
+	{
+		free(env[i]);
+		i++;
+		if (env[i] == NULL)
+		{
+			free(env);
+			env = NULL;
+			break;
+		}
+	}
+
 }
 
 /**

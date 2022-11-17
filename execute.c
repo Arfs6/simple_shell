@@ -14,7 +14,6 @@ int _execve(char *argv[], char *env[], char *execName, int lineNo);
 /**
  * execute - execute an executable
  * @argv: arguments vector called with executable
- * @env: environment variable
  * @execName: name of shell executable
  * @lineNo: current line
  * @path: path to search for executables
@@ -22,15 +21,15 @@ int _execve(char *argv[], char *env[], char *execName, int lineNo);
  *
  * Return: -1 if fork or execve fails
  */
-int execute(char *argv[], char *env[], char *execName,
-		int lineNo, list_t *path, int status)
+int execute(char *argv[], char *execName,
+		int lineNo, list_t **path, int status)
 {
 	int ret = 0;
 
-	ret = execBuiltin(argv, env, status, path, execName, lineNo);
+	ret = execBuiltin(argv, status, path, execName, lineNo);
 	if (ret >= SUCCESS)
 		return (ret);
-	if (setPath(argv, path) == -1)
+	if (setPath(argv, *path) == -1)
 	{
 		_dprintf(MEMERR, execName, lineNo);
 		return (2);
@@ -75,7 +74,7 @@ int _execve(char *argv[], char *env[], char *execName, int lineNo)
 	}
 	if (myPid == 0)
 	{
-		ret = execve(argv[0], argv, env);
+		ret = execve(argv[0], argv, environ);
 		if (ret == -1)
 		{
 			_dprintf(SYSERR, execName, lineNo);
@@ -84,7 +83,7 @@ int _execve(char *argv[], char *env[], char *execName, int lineNo)
 		}
 	}
 	else
-		wait(&status);
+		wait(&ret);
 
-	return (status);
+	return (ret);
 }

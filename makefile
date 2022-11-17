@@ -1,6 +1,6 @@
 flags = -Wall -Werror -Wextra -pedantic -std=gnu89
 objects = .functions0.o .strings.o .get.o .put.o .main.o .execute.o \
-	  .linklist.o .print.o .commands.o .functions1.o #.strtok.o .getline.o
+	  .linklist.o .print.o .commands.o .functions1.o .setenv.o # .strtok.o .getline.o
 
 hsh: $(objects)
 	gcc -o hsh $(objects)
@@ -29,6 +29,8 @@ hsh: $(objects)
 #	gcc -c $(flags) getline.c -o .getline.o
 #.strtok.o: strtok.c main.h
 #	gcc -c $(flags) strtok.c -o .strtok.o
+.setenv.o: setenv.c main.h
+	gcc -c $(flags) setenv.c -o .setenv.o
 
 clean:
 	rm -rf *.o

@@ -6,26 +6,32 @@
 /**
  * execBuiltin - execute builtin commands
  * @argv: command vector
- * @env: environment variable
- * @status: status
- * @path: PATH variable
- * @execName: executable name
- * @lineNo: line number
+ * @status: status of last command
+ * @path: link list for directories in PATH variable
+ * @execName: name of executable
+ * @lineNo: current line number in shell
  *
  * Return: 0: command is builtin and was executed (SUCCESS)
- * -1:acommand is not builtin (FAIL)
+ * -1:command is not builtin (FAIL)
  */
-int execBuiltin(char **argv, char **env, int status,
-		list_t *path, char *execName, int lineNo)
+int execBuiltin(char **argv, int status,
+		list_t **path, char *execName, int lineNo)
 {
-	char *builtinList[] = {"exit", "env"};
+	builtin_t builtinList[] = {
+		{"exit", &terminate}, {"env", &printEnv}, {"unsetenv", &unsetEnv},
+		{NULL, NULL}
+	};
+	int i = 0, ret = 0, len;
 
-	if (_strncmp(argv[0], builtinList[0], _strlen(builtinList[0]) + 1) == 0)
-		return (terminate(argv, status, path, execName, lineNo));
-	else if (_strncmp(argv[0], builtinList[1], _strlen(builtinList[1]) + 1) == 0)
+	for (i = 0; builtinList[i].cmd != NULL; ++i)
 	{
-		printEnv(env);
-		return (SUCCESS);
+		len = _strlen(builtinList[i].cmd);
+		ret = _strncmp(builtinList[i].cmd, argv[0], len);
+		if (ret == 0)
+		{
+			ret = builtinList[i].func(argv, status, path, execName, lineNo);
+			return (ret);
+		}
 	}
 
 	return (FAIL);
@@ -41,15 +47,15 @@ int execBuiltin(char **argv, char **env, int status,
  *
  * Return: 2: illegal number to terminate with
  */
-int terminate(char **argv, int status, list_t *path,
-		char *execName, int lineNo)
+int terminate(char *argv[], int status,
+		list_t **path, char *execName, int lineNo)
 {
 	int num = 0;
 
 	if (argv[1] == NULL)
 	{
 		free_list(path);
-		_free(argv);
+		_free(argv, environ);
 		exit(status);
 	}
 
@@ -60,22 +66,37 @@ int terminate(char **argv, int status, list_t *path,
 	}
 
 	free_list(path);
-	_free(argv);
+	_free(argv, environ);
 	exit(num);
 }
 
 /**
  * printEnv - print environment variable
- * @env: environment variable
+ * @argv: command vector
+ * @status: status of last executed command
+ * @path: link list for dir in PATH variable
+ * @execName: name of executable the shell was called with
+ * @lineNo: current line number in shell
  */
-void printEnv(char **env)
+int printEnv(char *argv[], int status,
+		list_t **path, char *execName, int lineNo)
 {
 	int i = 0;
 
-	for (i = 0; env[i]; i++)
+	/* supressing unused arguments warning */
+	useArg(argv, status, path, execName, lineNo);
+
+	if (environ == NULL || environ[i] == NULL)
 	{
-	_puts(STDOUT_FILENO, env[i]);
+		_putchar('\n');
+		return (0);
+	}
+
+	for (i = 0; environ[i]; ++i)
+	{
+	_puts(STDOUT_FILENO, environ[i]);
 	_putchar('\n');
 	}
 
+	return (0);
 }
