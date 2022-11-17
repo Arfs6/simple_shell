@@ -38,7 +38,7 @@ int execute(char *argv[], char *execName,
 	if (ret == -1)
 	{
 		_dprintf(NOTFOUNDERR, execName, lineNo, argv[0]);
-		return (2);
+		return (127);
 	}
 	else if (ret == -2)
 	{
