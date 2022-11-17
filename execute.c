@@ -7,7 +7,7 @@
 
 #include "main.h"
 
-int _execve(char *argv[], char *env[], char *execName, int lineNo);
+int _execve(char *argv[], char *execName, int lineNo);
 
 	int setPath(char **cmd, list_t *path);
 
@@ -46,21 +46,20 @@ int execute(char *argv[], char *execName,
 		return (2);
 	}
 
-	status = _execve(argv, env, execName, lineNo);
+	status = _execve(argv, execName, lineNo);
 	return (status);
 }
 
 /**
  * _execve - execute an executable
  * @argv: command vector
- * @env: environment variable
  * @execName: esecutable name
  * @lineNo: current line in shell
  *
  * Return: 0 success
  * -1 fail
  */
-int _execve(char *argv[], char *env[], char *execName, int lineNo)
+int _execve(char *argv[], char *execName, int lineNo)
 {
 	pid_t myPid;
 	int status = 0, ret = 0;
@@ -83,7 +82,7 @@ int _execve(char *argv[], char *env[], char *execName, int lineNo)
 		}
 	}
 	else
-		wait(&ret);
+		wait(&status);
 
-	return (ret);
+	return (status);
 }
