@@ -43,7 +43,7 @@ int execute(char *argv[], char *execName,
 	else if (ret == -2)
 	{
 		_dprintf(PERMERR, execName, lineNo, argv[0]);
-		return (2);
+		return (126);
 	}
 
 	status = _execve(argv, execName, lineNo);
