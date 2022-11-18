@@ -30,7 +30,6 @@ char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 		free_list(path);
 		_free(NULL, environ);
 		if (isatty(STDIN_FILENO) == 1)
-			_putchar('\n');
 		exit(*status);
 	}
 
