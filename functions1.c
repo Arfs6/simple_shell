@@ -138,3 +138,40 @@ void useArg(char *argv[], int status,
 	execName = execName;
 	lineNo = lineNo;
 }
+
+/**
+ * increaseEnv - allocates a space for new variable in environ
+ *
+ * Return: index of newly allocated memory
+ * -1: insufficient memory
+ */
+int increaseEnv(void)
+{
+	int i, idx, len;
+	char **_env;
+
+	i = idx = 0;
+
+	for (len = 0; environ && environ[len]; ++len)
+		;
+	len += 2; /* space for null and new space */
+
+	_env = malloc(sizeof(*_env) * len);
+	if (_env == NULL)
+		return (FAIL);
+
+	idx = len - 2;
+	for (i = 0; i < len; ++i)
+	{
+		if (i < len - 2)
+			_env[i] = environ[i];
+		else
+			_env[i] = NULL;
+	}
+
+	free(environ);
+
+	environ = _env;
+
+	return (idx);
+}
