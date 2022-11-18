@@ -29,7 +29,6 @@ char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 		free(cmdLine);
 		free_list(path);
 		_free(NULL, environ);
-		if (isatty(STDIN_FILENO) == 1)
 		exit(*status);
 	}
 
