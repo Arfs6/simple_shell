@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 
 #include "main.h"
@@ -25,7 +21,7 @@ int main(int argc, char **argv)
 
 	while (TRUE)
 	{
-		if (argc == 1)
+		if (isatty(STDIN_FILENO) == 1 && argc == 1)
 			_puts(STDOUT_FILENO, "$ ");
 		lineNo++;
 		vector = getCmd(&path, &status, argv[0], lineNo);
