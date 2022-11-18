@@ -38,8 +38,7 @@ struct builtin_s
 {
 	char *cmd;
 	int (*func)(char *argv[], int status,
-			list_t **path,
-			char *execName, int lineNo);
+			list_t **path, char *execName, int lineNo);
 };
 typedef struct builtin_s builtin_t;
 
@@ -60,6 +59,8 @@ int printEnv(char *argv[], int status,
 /* setenv.c */
 int unsetEnv(char *argv[], int status, list_t **path,
 		char *execName, int lineNo);
+int setEnv(char *argv[], int status,
+		list_t **path, char *execName, int lineNo);
 
 /* functions0.c */
 void _free(char **vector, char **env);

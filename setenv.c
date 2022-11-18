@@ -55,3 +55,37 @@ int unsetEnv(char *argv[], int status, list_t **path,
 
 	return (SUCCESS);
 }
+
+/**
+ * setEnv - command to set an environment variable
+ * @argv: command vector
+ * @status: status of last executed command
+ * @path: link list of directories in PATH variable
+ * @execName: executable name of this shell
+ * @lineNo: current line inshell
+ */
+int setEnv(char *argv[], int status,
+		list_t **path, char *execName, int lineNo)
+{
+	int ret = 0;
+
+	useArg(NULL, status, path, NULL, 0);
+
+	if (argv[1] == NULL || argv[2] == NULL)
+	{
+		_dprintf(STDERR_FILENO, "%s: %i: setenv: usage: setenv variable value\n", execName, lineNo);
+		return (2);
+	}
+
+	ret= _setenv(argv[1], argv[2]);
+	if (ret == FAIL)
+	{
+		_dprintf(MEMERR, execName, lineNo);
+		return (2);
+	}
+
+	if (_strncmp(argv[1], "PATH", _strlen("PATH")) == 0)
+		*path = getPathList();
+
+	return (SUCCESS);
+}

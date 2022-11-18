@@ -36,8 +36,8 @@ int _setenv(char *variable, char *value)
 
 	i = 0;
 	i = _strcat(variable, environ[idx], i);
-	i += _strcat("=", environ[idx], i);
-	i += _strcat(value, environ[idx], i);
+	i = _strcat("=", environ[idx], i);
+	i = _strcat(value, environ[idx], i);
 
 	return (SUCCESS);
 }
