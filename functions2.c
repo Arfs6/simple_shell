@@ -19,15 +19,15 @@ int _setenv(char *variable, char *value)
 	idx = getVariable(variable);
 	if (idx == FAIL)
 	{
-		idx = increaseEnv(_env);
+		idx = increaseEnv();
 		if (idx == FAIL)
 			return (FAIL);
 	}
 	else
 		free(environ[idx]);
 
-	len = strlen(variable);
-	len += strlen(value);
+	len = _strlen(variable);
+	len += _strlen(value);
 	len++;/* space for '=' */
 
 	environ[idx] = malloc(sizeof(char) * (len + 1));
