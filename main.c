@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 
 	while (TRUE)
 	{
-		if (argc == 1)
+		if (argc == 1 && !(isatty(STDIN_FILENO)))
 			_puts(STDOUT_FILENO, "$ ");
 		lineNo++;
 		vector = getCmd(&path, &status, argv[0], lineNo);
