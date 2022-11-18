@@ -74,6 +74,10 @@ int strToInt(char *str, int *num);
 void initEnv(void);
 void useArg(char *argv[], int status,
 		list_t **path, char *execName, int lineNo);
+int increaseEnv(void);
+
+/* functions2.c */
+int _setenv(char *variable, char *value);
 
 /* get.c */
 char **getCmd(list_t **path, int *status,
