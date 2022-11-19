@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "main.h"
 
@@ -40,4 +41,14 @@ int _setenv(char *variable, char *value)
 	i = _strcat(value, environ[idx], i);
 
 	return (SUCCESS);
+}
+
+/**
+ * handleSIGINT - handels the iinterupt signal
+ * @sigNum: signal number
+ */
+void handleSIGINT(int sigNum)
+{
+	sigNum = sigNum;
+	_puts(STDOUT_FILENO, "\n$ ");
 }

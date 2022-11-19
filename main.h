@@ -79,6 +79,7 @@ int increaseEnv(void);
 
 /* functions2.c */
 int _setenv(char *variable, char *value);
+void handleSIGINT(int sigNum);
 
 /* get.c */
 char **getCmd(list_t **path, int *status,

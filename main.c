@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <unistd.h>
 
 #include "main.h"
@@ -16,6 +17,7 @@ int main(int argc, char **argv)
 	char **vector = NULL;
 	list_t *path;
 
+	signal(SIGINT, handleSIGINT);
 	initEnv();
 	path = getPathList();
 
