@@ -6,6 +6,7 @@
 /**
  * _free - free a vector
  * @vector: vector to free
+ * @env: environment variable
  */
 void _free(char **vector, char **env)
 {

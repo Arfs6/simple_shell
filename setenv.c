@@ -21,7 +21,8 @@ int unsetEnv(char *argv[], int status, list_t **path,
 
 	if (argv[1] == NULL)
 	{
-		_dprintf(STDERR_FILENO, "%s: %i: unsetenv: variable not specified\n", execName, lineNo);
+		_dprintf(STDERR_FILENO, "%s: %i: unsetenv: variable not specified\n",
+				execName, lineNo);
 		return (2);
 	}
 
@@ -29,7 +30,8 @@ int unsetEnv(char *argv[], int status, list_t **path,
 	idx = getVariable(argv[1]);
 	if (idx == -1)
 	{
-		_dprintf(STDERR_FILENO, "%s: %i: unsetenv: %s: not found\n", execName, lineNo, argv[1]);
+		_dprintf(STDERR_FILENO, "%s: %i: unsetenv: %s: not found\n",
+				execName, lineNo, argv[1]);
 		return (2);
 	}
 
@@ -63,6 +65,9 @@ int unsetEnv(char *argv[], int status, list_t **path,
  * @path: link list of directories in PATH variable
  * @execName: executable name of this shell
  * @lineNo: current line inshell
+ *
+ * Return: 0: success
+ * -1: malloc fails
  */
 int setEnv(char *argv[], int status,
 		list_t **path, char *execName, int lineNo)
@@ -73,11 +78,12 @@ int setEnv(char *argv[], int status,
 
 	if (argv[1] == NULL || argv[2] == NULL)
 	{
-		_dprintf(STDERR_FILENO, "%s: %i: setenv: usage: setenv variable value\n", execName, lineNo);
+		_dprintf(STDERR_FILENO, "%s: %i: setenv: usage: setenv variable value\n",
+				execName, lineNo);
 		return (2);
 	}
 
-	ret= _setenv(argv[1], argv[2]);
+	ret = _setenv(argv[1], argv[2]);
 	if (ret == FAIL)
 	{
 		_dprintf(MEMERR, execName, lineNo);

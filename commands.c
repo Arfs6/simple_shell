@@ -77,6 +77,8 @@ int terminate(char *argv[], int status,
  * @path: link list for dir in PATH variable
  * @execName: name of executable the shell was called with
  * @lineNo: current line number in shell
+ *
+ * Return: 0: success
  */
 int printEnv(char *argv[], int status,
 		list_t **path, char *execName, int lineNo)

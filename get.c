@@ -11,6 +11,8 @@ unsigned int findSize(char *str, char *delm);
  * getCmd - get command vector. e.g. argv
  * @path: clear path if EOF was encountered
  * @status: status to exit if EOF was encountered
+ * @execName: executable name to use when printing error
+ * @lineNo: current line number in shell
  *
  * Return: vector of command. format should be supported by execve()
  * NULL if no command was passed or
@@ -18,7 +20,7 @@ unsigned int findSize(char *str, char *delm);
  */
 char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 {
-	char *cmd, *cmdLine, **cmdVector;
+	char *cmd = NULL, *cmdLine = NULL, **cmdVector = NULL;
 	int ret;
 	size_t size = 0, temp = 0, i = 0;
 
@@ -33,7 +35,7 @@ char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 	}
 
 	/* remove all whitty characters */
-	for (i = 0; temp && i < temp - 1; ++i)
+	for (i = 0; cmdLine[i]; /*i < temp - 1;*/ ++i)
 	{
 		if (cmdLine[i] == '\t' || cmdLine[i] == '\n')
 			cmdLine[i] = ' ';
@@ -43,7 +45,7 @@ char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 	cmd = strtok(cmdLine, " ");
 	if (cmd == NULL)
 		return (NULL);
-	cmdVector = malloc(sizeof(*cmdVector) * (size + 1));
+	cmdVector = malloc(sizeof(char *) * (size + 1));
 	if (cmdVector == NULL)
 	{
 		*status = 2;
