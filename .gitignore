@@ -1,4 +1,5 @@
 *.sh
+*.bash
 *.a
 *.swp
 tes*
