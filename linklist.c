@@ -16,7 +16,7 @@ list_t *add_node_end(list_t **head, const char *str)
 
 	if (head == NULL)
 		return (NULL);
-	newNode = malloc(sizeof(newNode));
+	newNode = malloc(sizeof(*newNode));
 	if (newNode == NULL)
 		return (NULL); /* insuffisient memory */
 	newNode->dir = _strdup(str);
