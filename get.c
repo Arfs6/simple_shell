@@ -130,7 +130,10 @@ list_t *getPathList(void)
 	i = findSize(_strdup(path), ":");
 	temp = strtok(path, ":");
 	if (temp == NULL)
+	{
+		free(path);
 		return (NULL);
+	}
 
 	i = 0;
 	while (temp != NULL)
