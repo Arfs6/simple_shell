@@ -44,7 +44,10 @@ char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 	size = findSize(_strdup(cmdLine), " ");
 	cmd = strtok(cmdLine, " ");
 	if (cmd == NULL)
+	{
+		free(cmdLine);
 		return (NULL);
+	}
 	cmdVector = malloc(sizeof(char *) * (size + 1));
 	if (cmdVector == NULL)
 	{
