@@ -3,6 +3,6 @@
 *.a
 *.swp
 tes*
-a.out
+*.out
 *.o
 hsh
