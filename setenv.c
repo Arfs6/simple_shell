@@ -14,7 +14,7 @@
  * Return: 0: success
  * -1: malloc fails or coudn't find variable
  */
-int unsetEnv(char *argv[], int status, list_t **path,
+int unsetEnv(char *argv[], int status, path_t **path,
 		char *execName, int lineNo)
 {
 	int idx = 0;
@@ -70,7 +70,7 @@ int unsetEnv(char *argv[], int status, list_t **path,
  * -1: malloc fails
  */
 int setEnv(char *argv[], int status,
-		list_t **path, char *execName, int lineNo)
+		path_t **path, char *execName, int lineNo)
 {
 	int ret = 0;
 

@@ -49,11 +49,11 @@ int strToInt(char *_str, int *num)
  * Return: 0: right path set
  * -1: malloc fails
  */
-	int setPath(char **cmd, list_t *path)
+	int setPath(char **cmd, path_t *path)
 {
 	int i = 0;
 	char *buf;
-	list_t *temp = path;
+	path_t *temp = path;
 
 	if (isSlash(*cmd) == 0)
 		return (SUCCESS);
@@ -95,7 +95,11 @@ void initEnv(void)
 	char **env;
 
 	if (environ == NULL || environ[0] == NULL)
+	{
+		environ = malloc(sizeof(*environ));
+		*environ = NULL;
 		return;
+	}
 
 	for (i = 0; environ && environ[i]; ++i)
 		;
@@ -130,7 +134,7 @@ void initEnv(void)
  * @lineNo: current line in shell
  */
 void useArg(char *argv[], int status,
-		list_t **path, char *execName, int lineNo)
+		path_t **path, char *execName, int lineNo)
 {
 	argv = argv;
 	status = status;

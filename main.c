@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 {
 	int lineNo = 0, status = 0;
 	char **vector = NULL;
-	list_t *path;
+	path_t *path;
 
 	signal(SIGINT, handleSIGINT);
 	initEnv();

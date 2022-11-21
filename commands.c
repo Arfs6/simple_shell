@@ -15,7 +15,7 @@
  * -1:command is not builtin (FAIL)
  */
 int execBuiltin(char **argv, int status,
-		list_t **path, char *execName, int lineNo)
+		path_t **path, char *execName, int lineNo)
 {
 	builtin_t builtinList[] = {
 		{"exit", &terminate}, {"env", &printEnv}, {"unsetenv", &unsetEnv},
@@ -48,7 +48,7 @@ int execBuiltin(char **argv, int status,
  * Return: 2: illegal number to terminate with
  */
 int terminate(char *argv[], int status,
-		list_t **path, char *execName, int lineNo)
+		path_t **path, char *execName, int lineNo)
 {
 	int num = 0;
 
@@ -81,7 +81,7 @@ int terminate(char *argv[], int status,
  * Return: 0: success
  */
 int printEnv(char *argv[], int status,
-		list_t **path, char *execName, int lineNo)
+		path_t **path, char *execName, int lineNo)
 {
 	int i = 0;
 

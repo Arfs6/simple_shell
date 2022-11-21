@@ -1,1 +1,7 @@
-
+{
+int changeDir(char *argv[], int status, path_t **path, char *execName, int
+lineNo)
+int ret;
+if (argv[1] == null)
+return (_chdir(getVariable("HOME))
+else if (strcmp(

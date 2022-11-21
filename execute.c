@@ -9,7 +9,7 @@
 
 int _execve(char *argv[], char *execName, int lineNo);
 
-	int setPath(char **cmd, list_t *path);
+	int setPath(char **cmd, path_t *path);
 
 /**
  * execute - execute an executable
@@ -22,7 +22,7 @@ int _execve(char *argv[], char *execName, int lineNo);
  * Return: -1 if fork or execve fails
  */
 int execute(char *argv[], char *execName,
-		int lineNo, list_t **path, int status)
+		int lineNo, path_t **path, int status)
 {
 	int ret = 0;
 

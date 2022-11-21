@@ -10,9 +10,9 @@
  * Return: address of new node
  * NULL if fails
 */
-list_t *add_node_end(list_t **head, const char *str)
+path_t *add_node_end(path_t **head, const char *str)
 {
-	list_t *newNode, *temp;
+	path_t *newNode, *temp;
 
 	if (head == NULL)
 		return (NULL);
@@ -40,12 +40,12 @@ list_t *add_node_end(list_t **head, const char *str)
 }
 
 /**
- * free_list - free a list_t list
+ * free_list - free a path_t list
  * @head: start of list
 */
-void free_list(list_t **head)
+void free_list(path_t **head)
 {
-	list_t *temp, *hold;
+	path_t *temp, *hold;
 
 	if (*head == NULL)
 		return;

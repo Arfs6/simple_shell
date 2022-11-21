@@ -114,6 +114,7 @@ int _strncmp(char *str1, char *str2, int index)
 			break;
 		i++;
 	}
+	i--;
 
-	return (0);
+	return (str1[i] - str2[i]);
 }

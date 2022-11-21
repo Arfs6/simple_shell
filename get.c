@@ -18,7 +18,7 @@ unsigned int findSize(char *str, char *delm);
  * NULL if no command was passed or
  * NULL if fails.
  */
-char **getCmd(list_t **path, int *status, char *execName, int lineNo)
+char **getCmd(path_t **path, int *status, char *execName, int lineNo)
 {
 	char *cmd = NULL, *cmdLine = NULL, **cmdVector = NULL;
 	int ret;
@@ -31,6 +31,8 @@ char **getCmd(list_t **path, int *status, char *execName, int lineNo)
 		free(cmdLine);
 		free_list(path);
 		_free(NULL, environ);
+		if (isatty(STDIN_FILENO) == 1)
+			_putchar('\n');
 		exit(*status);
 	}
 
@@ -108,10 +110,10 @@ unsigned int findSize(char *str, char *delim)
  * Return: vector of paths in PATH
  * NULL if fails
  */
-list_t *getPathList(void)
+path_t *getPathList(void)
 {
 	char *temp, *path = NULL;
-	list_t *head = NULL, *cur;
+	path_t *head = NULL, *cur;
 	int i = 0, tmp = 0;
 
 	if (environ == NULL || environ[0] == NULL)
