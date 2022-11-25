@@ -62,6 +62,10 @@ int unsetEnv(char *argv[], int status, path_t **path,
 int setEnv(char *argv[], int status,
 		path_t **path, char *execName, int lineNo);
 
+/* cd.c */
+int changeDirectory(char *argv[], int status,
+		list_t **path, char *execName, int lineNo);
+
 /* functions0.c */
 void _free(char **vector, char **env);
 int intcat(int num, char *dest, int len);
