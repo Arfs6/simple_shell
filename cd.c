@@ -9,6 +9,7 @@ int cdHOME(char *execName, int lineNo);
 int cdOLDPWD(char *execName, int lineNo);
 int cdDir(char *argv[], char *execName, int lineNo);
 int updatePWD(char *cdPath);
+char *setCdPath(char *cdPath);
 
 /**
  * changeDirectory - changes the current directory of the shell
@@ -23,7 +24,7 @@ int updatePWD(char *cdPath);
  * 3: insufficient memory
  */
 int changeDirectory(char *argv[], int status,
-		list_t **path, char *execName, int lineNo)
+		path_t **path, char *execName, int lineNo)
 {
 	/* suppressing unused argument error */
 	useArg(NULL, status, path, NULL, 0);
@@ -126,16 +127,16 @@ int cdOLDPWD(char *execName, int lineNo)
 int cdDir(char *argv[], char *execName, int lineNo)
 {
 	int ret;
-	char *cdPath;
+	char *cdPath = argv[1];
 
-	ret = chdir(argv[1]);
+	ret = chdir(cdPath);
 		if (ret == -1)
 		{
 			_dprintf(CDERR);
 			return (2);
 		}
 
-	ret = updatePWD(argv[1]);
+	ret = updatePWD(cdPath);
 
 	return (ret);
 }
@@ -147,30 +148,77 @@ int cdDir(char *argv[], char *execName, int lineNo)
  * return: 0: success (SUCCESS)
  * 3: insufficient memory
  */
-int updatePWD(char *cdPath)
+int updatePWD(char *_cdPath)
 {
 	int ret;
-	char *oldpwd;
+	char *oldpwd, *cdPath;
+
+	cdPath = setCdPath(_cdPath);
+	if (cdPath == NULL)
+		return (3);
 
 	ret = getVariable("PWD");
 	if (ret == -1)
 	{
 		ret = _setenv("PWD", cdPath);
 		if (ret == -1)
+		{
+			free(cdPath);
 			return (3);
+		}
+		free(cdPath);
 		return (0);
 	}
 
 	oldpwd = environ[ret];
-	oldpwd += 7;
+	oldpwd += 4;
 
 	ret = _setenv("OLDPWD", oldpwd);
 	if (ret == -1)
+	{
+		free(cdPath);
 		return (3);
+	}
 
 	ret = _setenv("PWD", cdPath);
+			free(cdPath);
 	if (ret == -1)
 		return (3);
 
 	return (SUCCESS);
+}
+
+/**
+ * setCdPath - makes currently set directory absolute path
+ * @cdPath: current working directory
+ *
+ * Return: absolute path
+ * NULL: insufficient memory
+ */
+char *setCdPath(char *cdPath)
+{
+	char *absPath = NULL, *temp;
+	int ret = 0;
+
+	absPath = getcwd(absPath, 0);
+		if (absPath != NULL)
+			return (absPath);
+
+	if (cdPath[0] == '/')
+		return (_strdup(cdPath));
+
+	ret = getVariable("PWD");
+	if (ret == -1)
+		return (_strdup(cdPath));
+
+	temp = environ[ret];
+	absPath = malloc(sizeof(char) * (_strlen(temp) + _strlen(cdPath) + 2));
+
+	ret = 0;
+	ret = _strcat(temp, absPath, ret);
+	if (absPath[ret -1] == '/')
+		ret = _strcat("/", absPath, ret);
+	ret = _strcat(cdPath, absPath, ret);
+
+	return (absPath);
 }

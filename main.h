@@ -64,7 +64,7 @@ int setEnv(char *argv[], int status,
 
 /* cd.c */
 int changeDirectory(char *argv[], int status,
-		list_t **path, char *execName, int lineNo);
+		path_t **path, char *execName, int lineNo);
 
 /* functions0.c */
 void _free(char **vector, char **env);
@@ -84,6 +84,7 @@ int increaseEnv(void);
 /* functions2.c */
 int _setenv(char *variable, char *value);
 void handleSIGINT(int sigNum);
+void initPWD(void);
 
 /* get.c */
 char **getCmd(path_t **path, int *status,

@@ -52,3 +52,24 @@ void handleSIGINT(int sigNum)
 	sigNum = sigNum;
 	_puts(STDOUT_FILENO, "\n$ ");
 }
+
+/**
+ * initPWD - initialized PWD variable in environment variable
+ */
+void initPWD(void)
+{
+	char *cwd = NULL;
+	int temp = 0;
+
+	temp = getVariable("PWD");
+	if (temp >= 0)
+		return;
+
+	cwd = getcwd(cwd, 0);
+	if (cwd == NULL)
+		return;
+
+	_setenv("PWD", cwd);
+
+	free(cwd);
+}

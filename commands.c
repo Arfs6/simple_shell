@@ -19,7 +19,7 @@ int execBuiltin(char **argv, int status,
 {
 	builtin_t builtinList[] = {
 		{"exit", &terminate}, {"env", &printEnv}, {"unsetenv", &unsetEnv},
-		{"setenv", &setEnv}, {NULL, NULL}
+		{"cd", &changeDirectory}, {"setenv", &setEnv}, {NULL, NULL}
 	};
 	int i = 0, ret = 0, len;
 

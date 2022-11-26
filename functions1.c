@@ -123,6 +123,7 @@ void initEnv(void)
 	}
 	env[i] = NULL;
 	environ = env;
+	initPWD();
 }
 
 /**
