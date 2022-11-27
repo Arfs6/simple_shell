@@ -3,8 +3,7 @@
 
 #include "main.h"
 
-#define CDERR (STDERR_FILENO, "%s: %i: cd: can't cd to %s\n", \
-		execName, lineNo, cdPath)
+#define CDERR STDERR_FILENO, "%s: %i: cd: can't cd to %s\n"
 
 int cdHOME(char *execName, int lineNo);
 int cdOLDPWD(char *execName, int lineNo);
@@ -61,7 +60,7 @@ int cdHOME(char *execName, int lineNo)
 	ret = chdir(cdPath);
 	if (ret == -1)
 	{
-		_dprintf(CDERR);
+		_dprintf(CDERR, execName, lineNo, cdPath);
 		return (0);
 	}
 
@@ -105,7 +104,7 @@ int cdOLDPWD(char *execName, int lineNo)
 	ret = chdir(cdPath);
 	if (ret == -1)
 	{
-		_dprintf(CDERR);
+		_dprintf(CDERR, execName, lineNo, cdPath);
 		return (2);
 	}
 
@@ -133,7 +132,7 @@ int cdDir(char *argv[], char *execName, int lineNo)
 	ret = chdir(cdPath);
 		if (ret == -1)
 		{
-			_dprintf(CDERR);
+			_dprintf(CDERR, execName, lineNo, cdPath);
 			return (2);
 		}
 
