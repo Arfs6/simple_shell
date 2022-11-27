@@ -73,3 +73,38 @@ void initPWD(void)
 
 	free(cwd);
 }
+
+/**
+ * setCdPath - makes currently set directory absolute path
+ * @cdPath: current working directory
+ *
+ * Return: absolute path
+ * NULL: insufficient memory
+ */
+char *setCdPath(char *cdPath)
+{
+	char *absPath = NULL, *temp;
+	int ret = 0;
+
+	absPath = getcwd(absPath, 0);
+		if (absPath != NULL)
+			return (absPath);
+
+	if (cdPath[0] == '/')
+		return (_strdup(cdPath));
+
+	ret = getVariable("PWD");
+	if (ret == -1)
+		return (_strdup(cdPath));
+
+	temp = environ[ret];
+	absPath = malloc(sizeof(char) * (_strlen(temp) + _strlen(cdPath) + 2));
+
+	ret = 0;
+	ret = _strcat(temp, absPath, ret);
+	if (absPath[ret - 1] == '/')
+		ret = _strcat("/", absPath, ret);
+	ret = _strcat(cdPath, absPath, ret);
+
+	return (absPath);
+}

@@ -98,6 +98,7 @@ void initEnv(void)
 	{
 		environ = malloc(sizeof(*environ));
 		*environ = NULL;
+		initPWD();
 		return;
 	}
 
@@ -108,6 +109,7 @@ void initEnv(void)
 	if (env == NULL)
 	{
 		environ = NULL; /* other functions expects a malloc environ */
+		initPWD();
 		return;
 	}
 
@@ -118,6 +120,7 @@ void initEnv(void)
 		{
 			/* Not freeing it so we have some variables */
 			environ = env;
+			initPWD();
 			return;
 		}
 	}

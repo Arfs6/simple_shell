@@ -3,7 +3,8 @@
 
 #include "main.h"
 
-#define CDERR STDERR_FILENO, "%s: %i: cd: can't cd to %s\n", execName, lineNo, cdPath
+#define CDERR (STDERR_FILENO, "%s: %i: cd: can't cd to %s\n", \
+		execName, lineNo, cdPath)
 
 int cdHOME(char *execName, int lineNo);
 int cdOLDPWD(char *execName, int lineNo);
@@ -143,9 +144,9 @@ int cdDir(char *argv[], char *execName, int lineNo)
 
 /**
  * updatePWD - update PWD and OLDPWD variables in environment variable
- * @cdPath: current working directory
+ * @_cdPath: current working directory
  *
- * return: 0: success (SUCCESS)
+ * Return: 0: success (SUCCESS)
  * 3: insufficient memory
  */
 int updatePWD(char *_cdPath)
@@ -186,39 +187,4 @@ int updatePWD(char *_cdPath)
 		return (3);
 
 	return (SUCCESS);
-}
-
-/**
- * setCdPath - makes currently set directory absolute path
- * @cdPath: current working directory
- *
- * Return: absolute path
- * NULL: insufficient memory
- */
-char *setCdPath(char *cdPath)
-{
-	char *absPath = NULL, *temp;
-	int ret = 0;
-
-	absPath = getcwd(absPath, 0);
-		if (absPath != NULL)
-			return (absPath);
-
-	if (cdPath[0] == '/')
-		return (_strdup(cdPath));
-
-	ret = getVariable("PWD");
-	if (ret == -1)
-		return (_strdup(cdPath));
-
-	temp = environ[ret];
-	absPath = malloc(sizeof(char) * (_strlen(temp) + _strlen(cdPath) + 2));
-
-	ret = 0;
-	ret = _strcat(temp, absPath, ret);
-	if (absPath[ret -1] == '/')
-		ret = _strcat("/", absPath, ret);
-	ret = _strcat(cdPath, absPath, ret);
-
-	return (absPath);
 }
